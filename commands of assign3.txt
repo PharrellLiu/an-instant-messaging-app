@@ -1,0 +1,28 @@
+Now you have started your instance, use these commands to build your environment: 
+sudo apt-get update
+sudo apt-get install nginx gunicorn supervisor
+sudo apt-get install mysql-server
+sudo apt-get install python-pip
+sudo pip install Flask
+sudo pip install mysql-connector-python
+
+Then build your own database & your python api, follow the instructions of assign3
+Please do not use any python3's feature in your api since we would use python2 here
+
+Now we start in 2.4.1
+
+About the gunicorn please use this command
+gunicorn -b 0.0.0.0:8000 --workers=4 iems5722_a3:app
+
+About the supervisor, please vim your conf in the same directory of your python code
+Please remember to change the command, directory & stdout_logfile
+Then just follow the instruction of supervisor, it should be all correct
+
+About nignx
+Vim your conf in the same directory of your python code
+Change the proxy_pass to 0.0.0.0
+Then the commands are:
+sudo cp iems5722_web.conf /etc/nginx/sites-enabled/
+sudo service nginx restart
+
+Everything is done!
