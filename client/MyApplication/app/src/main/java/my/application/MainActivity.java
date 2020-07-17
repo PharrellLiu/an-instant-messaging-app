@@ -1,20 +1,23 @@
 package my.application;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import org.xutils.x;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
+
     @ViewInject(R.id.button_login)
     Button loginButton;
     @ViewInject(R.id.button_register)
@@ -24,21 +27,43 @@ public class MainActivity extends AppCompatActivity {
     @ViewInject(R.id.edittext_name)
     EditText nameEditText;
 
-    private Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(MainActivity.this);
-
-        context = getApplicationContext();
-
-
-
     }
+
     @Event(value = R.id.button_login)
-    private void clickLoginButton(View view) {
-        Toast.makeText(context, "Welcome",Toast.LENGTH_SHORT).show();
+    private void onClickLoginButton(View view) {
+        String name = nameEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        if (name.length() == 0 || password.length() == 0){
+            Toast.makeText(x.app(), "input something",Toast.LENGTH_LONG).show();
+        } else {
+            RequestParams params = new RequestParams(URLCollection.LOGIN_URL);
+            params.addBodyParameter("name", name);
+            params.addBodyParameter("password", password);
+            x.http().post(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    Toast.makeText(x.app(), result, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+                }
+
+                @Override
+                public void onFinished() {
+                }
+            });
+        }
+
 
     }
 }
