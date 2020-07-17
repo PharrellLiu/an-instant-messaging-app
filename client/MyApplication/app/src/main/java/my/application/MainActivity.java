@@ -1,5 +1,6 @@
 package my.application;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Event(value = R.id.button_login)
     private void onClickLoginButton(View view) {
-        String name = nameEditText.getText().toString();
+        final String name = nameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         if (name.length() == 0 || password.length() == 0){
             Toast.makeText(x.app(), "input something",Toast.LENGTH_LONG).show();
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
                         String status = jsonObject.getString("status");
                         if (status.equals("ok")){
                             Toast.makeText(x.app(), "welcome", Toast.LENGTH_LONG).show();
+                            MyApp myApp = (MyApp) getApplication();
+                            myApp.setName(name);
+                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                         }
@@ -76,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Event(value = R.id.button_register)
     private void onClickRegisterButton(View view) {
-        String name = nameEditText.getText().toString();
+        final String name = nameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         if (name.length() == 0 || password.length() == 0){
             Toast.makeText(x.app(), "input something",Toast.LENGTH_LONG).show();
@@ -92,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
                         String status = jsonObject.getString("status");
                         if (status.equals("ok")){
                             Toast.makeText(x.app(), "welcome", Toast.LENGTH_LONG).show();
+                            MyApp myApp = (MyApp) getApplication();
+                            myApp.setName(name);
+                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                         }
