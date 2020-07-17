@@ -1,8 +1,8 @@
-from flask import Flask
-from flask import jsonify
-from flask import request
-from flask import g
+import json
 import mysql.connector
+from flask import Flask
+from flask import g
+from flask import request
 
 
 class MyDatabase:
@@ -24,6 +24,11 @@ class MyDatabase:
         self.cursor = self.conn.cursor(dictionary=True)
         return
 
+
+'''
+AttributeError: 'Request' object has no attribute 'is_xhr'
+if we use jsonify in here, we would meet this error
+'''
 
 app = Flask(__name__)
 
@@ -78,10 +83,10 @@ def login():
     name = request.values.get("name")
     result = is_name_exist_in_login(name, password)
     if result == 0:
-        return jsonify({"status": "error", "message": "no such name"})
+        return json.dumps({"status": "error", "message": "no such name"})
     if result == 1:
-        return jsonify({"status": "error", "message": "wrong password"})
-    return jsonify({"status": "ok"})
+        return json.dumps({"status": "error", "message": "wrong password"})
+    return json.dumps({"status": "ok"})
 
 
 @app.route('/api/register', methods=['POST'])
@@ -89,16 +94,10 @@ def register():
     password = request.values.get("password")
     name = request.values.get("name")
     if is_name_exist_in_register(name) is True:
-        return jsonify({"status": "error", "message": "name already exists"})
+        return json.dumps({"status": "error", "message": "name already exists"})
     write_in_login(name, password)
-    return jsonify({"status": "ok"})
-
-
-@app.route('/hello')
-def hello_world():
-    return 'Hello, World!'
+    return json.dumps({"status": "ok"})
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
-
+    app.run(host="0.0.0.0", debug=True)

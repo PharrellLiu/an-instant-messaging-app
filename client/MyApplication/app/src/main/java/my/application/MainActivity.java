@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
@@ -46,24 +48,69 @@ public class MainActivity extends AppCompatActivity {
             x.http().post(params, new Callback.CommonCallback<String>() {
                 @Override
                 public void onSuccess(String result) {
-                    Toast.makeText(x.app(), result, Toast.LENGTH_LONG).show();
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String status = jsonObject.getString("status");
+                        if (status.equals("ok")){
+                            Toast.makeText(x.app(), "welcome", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
                     Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
                 }
-
                 @Override
                 public void onCancelled(CancelledException cex) {
                 }
-
                 @Override
                 public void onFinished() {
                 }
             });
         }
-
-
     }
+
+    @Event(value = R.id.button_register)
+    private void onClickRegisterButton(View view) {
+        String name = nameEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        if (name.length() == 0 || password.length() == 0){
+            Toast.makeText(x.app(), "input something",Toast.LENGTH_LONG).show();
+        } else {
+            RequestParams params = new RequestParams(URLCollection.REGISTER_URL);
+            params.addBodyParameter("name", name);
+            params.addBodyParameter("password", password);
+            x.http().post(params, new Callback.CommonCallback<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String status = jsonObject.getString("status");
+                        if (status.equals("ok")){
+                            Toast.makeText(x.app(), "welcome", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                @Override
+                public void onCancelled(CancelledException cex) {
+                }
+                @Override
+                public void onFinished() {
+                }
+            });
+        }
+    }
+
 }
