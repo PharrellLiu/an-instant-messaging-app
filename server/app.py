@@ -99,5 +99,13 @@ def register():
     return json.dumps({"status": "ok"})
 
 
+@app.route('/api/get_fri_list', methods=['GET'])
+def get_fri_list():
+    query = "SELECT name FROM login ORDER BY "
+    g.mydb.cursor.execute(query)
+    result = g.mydb.cursor.fetchall()
+    return json.dumps({"result":result})
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

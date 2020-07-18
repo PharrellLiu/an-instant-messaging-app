@@ -1,5 +1,4 @@
 import requests
 
-r = requests.post('http://192.168.0.100:5000/api/login',
-                  data={'name': 'lbw', 'password': 'lbwnbb'})
+r = requests.get('http://192.168.0.103:5000/api/get_fri_list')
 print(r.text)
