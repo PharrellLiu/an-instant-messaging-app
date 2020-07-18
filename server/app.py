@@ -104,7 +104,7 @@ def get_fri_list():
     query = "SELECT name FROM login ORDER BY "
     g.mydb.cursor.execute(query)
     result = g.mydb.cursor.fetchall()
-    return json.dumps({"result":result})
+    return json.dumps({"result": result})
 
 
 if __name__ == '__main__':
