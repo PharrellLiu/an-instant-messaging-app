@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_chatroom">
+
+    <fragment
+        android:id="@+id/navigation_chatroom"
+        android:name="my.application.ui.chatroom.ChatroomFragment"
+        android:label="chatroom"
+        tools:layout="@layout/chatroom_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_private_chat"
+        android:name="my.application.ui.private_chat.PrivateChatFragment"
+        android:label="private chat"
+        tools:layout="@layout/private_chat_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_moment"
+        android:name="my.application.ui.moment.MomentFragment"
+        android:label="moment"
+        tools:layout="@layout/moment_fragment" />
+</navigation>
