@@ -101,7 +101,7 @@ def register():
 
 @app.route('/api/get_fri_list', methods=['GET'])
 def get_fri_list():
-    query = "SELECT name FROM login ORDER BY "
+    query = "SELECT name FROM login ORDER BY name asc"
     g.mydb.cursor.execute(query)
     result = g.mydb.cursor.fetchall()
     return json.dumps({"result": result})
