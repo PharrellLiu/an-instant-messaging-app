@@ -36,12 +36,14 @@ public class ButtonAdapterOfChatroomAndPrivateChat extends RecyclerView.Adapter<
 
     @Override
     public void onBindViewHolder(@NonNull ButtonAdapterOfChatroomAndPrivateChat.ButtonViewHolderOfChatroomAndPrivateChat holder, final int position) {
-        holder.button.setText(mDataset.get(position));
+        final String nameOfChatroomOrFri = mDataset.get(position);
+        holder.button.setText(nameOfChatroomOrFri);
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext,ChatActivity.class);
                 intent.putExtra("isChatroom",isChatroom);
+                intent.putExtra("nameOfChatroomOrFri",nameOfChatroomOrFri);
                 mContext.startActivity(intent);
             }
         });

@@ -21,6 +21,8 @@ public class ChatActivity extends AppCompatActivity {
         x.view().inject(ChatActivity.this);
         Intent intent = getIntent();
         int isChatroom = intent.getIntExtra("isChatroom",-1);
+        String nameOfChatroomOrFri = intent.getStringExtra("nameOfChatroomOrFri");
+
 
     }
 }
