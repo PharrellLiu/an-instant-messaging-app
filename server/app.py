@@ -107,5 +107,15 @@ def get_fri_list():
     return json.dumps({"result": result})
 
 
+@app.route('/api/get_chatroom_list', methods=['GET'])
+def get_chatroom_list():
+    name = request.values.get("name")
+    query = "SELECT chatroom FROM chatrooms WHERE name = %s ORDER BY chatroom asc"
+    params = (name,)
+    g.mydb.cursor.execute(query, params)
+    result = g.mydb.cursor.fetchall()
+    return json.dumps({"result": result})
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

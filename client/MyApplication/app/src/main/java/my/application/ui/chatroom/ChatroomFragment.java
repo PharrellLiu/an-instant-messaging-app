@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.application.ButtonAdapterOfChatroomAndPrivateChat;
+import my.application.MyApp;
 import my.application.R;
 import my.application.URLCollection;
 
@@ -59,7 +60,11 @@ public class ChatroomFragment extends Fragment {
         mAdapter = new ButtonAdapterOfChatroomAndPrivateChat(myDataset,mContext,1);
         recyclerView.setAdapter(mAdapter);
 
-        RequestParams params = new RequestParams(URLCollection.GET_CHATROOM_LIST_URL);
+        MyApp myApp = (MyApp) getActivity().getApplication();
+        String userName = myApp.getName();
+
+        String url = URLCollection.GET_CHATROOM_LIST_URL + userName;
+        RequestParams params = new RequestParams(url);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
