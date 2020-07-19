@@ -50,7 +50,8 @@ public class PrivateChatFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         myDataset.add("123");
-        myDataset.add("222");
+        myDataset.add("333");
+        myDataset.add("999");
 
         mAdapter = new ButtonAdapterOfChatroomAndPrivateChat(myDataset,mContext);
         recyclerView.setAdapter(mAdapter);

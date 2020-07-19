@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         final String name = nameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         if (name.length() == 0 || password.length() == 0){
-            Toast.makeText(x.app(), "input something",Toast.LENGTH_LONG).show();
+            Toast.makeText(x.app(), "input something",Toast.LENGTH_SHORT).show();
         } else {
             RequestParams params = new RequestParams(URLCollection.LOGIN_URL);
             params.addBodyParameter("name", name);
@@ -53,13 +53,13 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(result);
                         String status = jsonObject.getString("status");
                         if (status.equals("ok")){
-                            Toast.makeText(x.app(), "welcome", Toast.LENGTH_LONG).show();
+                            Toast.makeText(x.app(), "welcome", Toast.LENGTH_SHORT).show();
                             MyApp myApp = (MyApp) getApplication();
                             myApp.setName(name);
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
                 @Override
                 public void onCancelled(CancelledException cex) {
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         final String name = nameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         if (name.length() == 0 || password.length() == 0){
-            Toast.makeText(x.app(), "input something",Toast.LENGTH_LONG).show();
+            Toast.makeText(x.app(), "input something",Toast.LENGTH_SHORT).show();
         } else {
             RequestParams params = new RequestParams(URLCollection.REGISTER_URL);
             params.addBodyParameter("name", name);
@@ -96,13 +96,13 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(result);
                         String status = jsonObject.getString("status");
                         if (status.equals("ok")){
-                            Toast.makeText(x.app(), "welcome", Toast.LENGTH_LONG).show();
+                            Toast.makeText(x.app(), "welcome", Toast.LENGTH_SHORT).show();
                             MyApp myApp = (MyApp) getApplication();
                             myApp.setName(name);
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
                 @Override
                 public void onCancelled(CancelledException cex) {

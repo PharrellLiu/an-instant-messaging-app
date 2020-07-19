@@ -37,7 +37,7 @@ public class ButtonAdapterOfChatroomAndPrivateChat extends RecyclerView.Adapter<
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext,mDataset.get(position),Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext,mDataset.get(position),Toast.LENGTH_SHORT).show();
             }
         });
     }
