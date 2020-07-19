@@ -1,6 +1,7 @@
 package my.application;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,9 @@ public class ButtonAdapterOfChatroomAndPrivateChat extends RecyclerView.Adapter<
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext,mDataset.get(position),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext,ChatActivity.class);
+                intent.putExtra("isChatroom",isChatroom);
+                mContext.startActivity(intent);
             }
         });
     }
