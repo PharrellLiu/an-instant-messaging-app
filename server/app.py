@@ -53,11 +53,10 @@ def is_name_exist_in_register(name):
     g.mydb.cursor.execute(query, params)
     if len(g.mydb.cursor.fetchall()) == 0:
         return False
-    else:
-        return True
+    return True
 
 
-def is_name_exist_in_login(name, password):
+def is_name_exist_in_login_and_password_correct(name, password):
     query = "SELECT * FROM login WHERE name = %s"
     params = (name,)
     g.mydb.cursor.execute(query, params)
@@ -81,7 +80,7 @@ def write_in_login(name, password):
 def login():
     password = request.values.get("password")
     name = request.values.get("name")
-    result = is_name_exist_in_login(name, password)
+    result = is_name_exist_in_login_and_password_correct(name, password)
     if result == 0:
         return json.dumps({"status": "error", "message": "no such name"})
     if result == 1:
