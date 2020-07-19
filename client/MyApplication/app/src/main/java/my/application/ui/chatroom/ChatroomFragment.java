@@ -56,7 +56,7 @@ public class ChatroomFragment extends Fragment {
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new ButtonAdapterOfChatroomAndPrivateChat(myDataset,mContext);
+        mAdapter = new ButtonAdapterOfChatroomAndPrivateChat(myDataset,mContext,1);
         recyclerView.setAdapter(mAdapter);
 
         RequestParams params = new RequestParams(URLCollection.GET_CHATROOM_LIST_URL);

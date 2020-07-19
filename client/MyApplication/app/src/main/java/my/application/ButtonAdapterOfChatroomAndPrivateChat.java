@@ -16,10 +16,12 @@ public class ButtonAdapterOfChatroomAndPrivateChat extends RecyclerView.Adapter<
 
     private List<String> mDataset;
     private Context mContext;
+    private int isChatroom; // 1 is chatroom, 0 is private chat
 
-    public ButtonAdapterOfChatroomAndPrivateChat(List<String> myDataset,Context context) {
+    public ButtonAdapterOfChatroomAndPrivateChat(List<String> myDataset,Context context,int num) {
         mDataset = myDataset;
         mContext = context;
+        isChatroom = num;
     }
     
     @NonNull
