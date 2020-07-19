@@ -14,12 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import my.application.ButtonAdapterOfChatroomAndPrivateChat;
 import my.application.R;
+import my.application.URLCollection;
+
+import org.xutils.x;
 
 public class PrivateChatFragment extends Fragment {
 
@@ -48,13 +58,36 @@ public class PrivateChatFragment extends Fragment {
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
-
-        myDataset.add("123");
-        myDataset.add("333");
-        myDataset.add("999");
-
         mAdapter = new ButtonAdapterOfChatroomAndPrivateChat(myDataset,mContext);
         recyclerView.setAdapter(mAdapter);
+
+        RequestParams params = new RequestParams(URLCollection.GET_FRI_LIST_URL);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    JSONArray jsonArray = jsonObject.getJSONArray("result");
+                    int len = jsonArray.length();
+                    for (int i = 0; i<len; i++){
+                        myDataset.add(jsonArray.getJSONObject(i).getString("name"));
+                    }
+                    mAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+            @Override
+            public void onFinished() {
+            }
+        });
 
         return view;
     }
