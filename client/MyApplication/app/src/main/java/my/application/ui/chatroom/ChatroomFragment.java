@@ -47,7 +47,7 @@ public class ChatroomFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chatroom_fragment, container, false);
-        myDataset.set(0, "default chatroom");
+        myDataset.add("default chatroom");
         mContext = getActivity();
         recyclerView = view.findViewById(R.id.chatroom_recycler_view);
         // use this setting to improve performance if you know that changes
