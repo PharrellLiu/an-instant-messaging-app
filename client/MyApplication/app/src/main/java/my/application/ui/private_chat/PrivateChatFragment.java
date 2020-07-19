@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.application.ButtonAdapterOfChatroomAndPrivateChat;
+import my.application.MyApp;
 import my.application.R;
 import my.application.URLCollection;
 
@@ -61,6 +62,9 @@ public class PrivateChatFragment extends Fragment {
         mAdapter = new ButtonAdapterOfChatroomAndPrivateChat(myDataset,mContext,0);
         recyclerView.setAdapter(mAdapter);
 
+        MyApp myApp = (MyApp) getActivity().getApplication();
+        final String userName = myApp.getName();
+
         RequestParams params = new RequestParams(URLCollection.GET_FRI_LIST_URL);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
@@ -70,7 +74,10 @@ public class PrivateChatFragment extends Fragment {
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
                     int len = jsonArray.length();
                     for (int i = 0; i<len; i++){
-                        myDataset.add(jsonArray.getJSONObject(i).getString("name"));
+                        String name = jsonArray.getJSONObject(i).getString("name");
+                        if (!name.equals(userName)){
+                            myDataset.add(name);
+                        }
                     }
                     mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
