@@ -133,8 +133,26 @@ def get_chatroom_list():
     return json.dumps({"result": result})
 
 
-@app.route('/api/get_private_chat_message', methods=['GET'])
-def get_private_chat_message():
+@app.route('/api/get_chatroom_messages', methods=['GET'])
+def get_chatroom_messages():
+    chatroom = request.values.get("chatroom")
+    page = int(request.values.get("page"))
+    query = '''SELECT * FROM chatroom_messages WHERE chatroom = %s ORDER BY id DESC'''
+    params = (chatroom,)
+    g.mydb.cursor.execute(query, params)
+    result = g.mydb.cursor.fetchall()
+    total_page = int(len(result) / 15) + 1
+    if total_page < page:
+        return json.dumps({"status": "error"})
+    if page == total_page:
+        result = result[((page - 1) * 15):]
+    else:
+        result = result[((page - 1) * 15):(page * 15)]
+    return json.dumps({"status": "ok", "result": result}, cls=ComplexEncoder)
+
+
+@app.route('/api/get_private_chat_messages', methods=['GET'])
+def get_private_chat_messages():
     name1 = request.values.get("name1")
     name2 = request.values.get("name2")
     page = int(request.values.get("page"))
