@@ -3,6 +3,23 @@ import mysql.connector
 from flask import Flask
 from flask import g
 from flask import request
+from datetime import date, datetime
+
+
+class ComplexEncoder(json.JSONEncoder):
+    """
+    TypeError: Object of type datetime is not JSON serializable
+    meet this error in json.dumps, the reason is related to the datetime
+    find the solution on CSDN
+    """
+
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(obj, date):
+            return obj.strftime('%Y-%m-%d')
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 
 class MyDatabase:
@@ -114,6 +131,26 @@ def get_chatroom_list():
     g.mydb.cursor.execute(query, params)
     result = g.mydb.cursor.fetchall()
     return json.dumps({"result": result})
+
+
+@app.route('/api/get_private_chat_message', methods=['GET'])
+def get_private_chat_message():
+    name1 = request.values.get("name1")
+    name2 = request.values.get("name2")
+    page = int(request.values.get("page"))
+    query = '''SELECT * FROM private_chat_messages 
+            WHERE (sendname = %s and receivename = %s) or (sendname = %s and receivename = %s) ORDER BY id DESC'''
+    params = (name1, name2, name2, name1)
+    g.mydb.cursor.execute(query, params)
+    result = g.mydb.cursor.fetchall()
+    total_page = int(len(result) / 15) + 1
+    if total_page < page:
+        return json.dumps({"status": "error"})
+    if page == total_page:
+        result = result[((page - 1) * 15):]
+    else:
+        result = result[((page - 1) * 15):(page * 15)]
+    return json.dumps({"status": "ok", "result": result}, cls=ComplexEncoder)
 
 
 if __name__ == '__main__':
