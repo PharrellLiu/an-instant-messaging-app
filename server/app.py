@@ -93,6 +93,17 @@ def write_in_login(name, password):
     return
 
 
+def cut_messages_in_page(result, page):
+    total_page = int(len(result) / 15) + 1
+    if total_page < page:
+        return json.dumps({"status": "error"})
+    if page == total_page:
+        result = result[((page - 1) * 15):]
+    else:
+        result = result[((page - 1) * 15):(page * 15)]
+    return json.dumps({"status": "ok", "result": result}, cls=ComplexEncoder)
+
+
 @app.route('/api/login', methods=['POST'])
 def login():
     password = request.values.get("password")
@@ -141,14 +152,7 @@ def get_chatroom_messages():
     params = (chatroom,)
     g.mydb.cursor.execute(query, params)
     result = g.mydb.cursor.fetchall()
-    total_page = int(len(result) / 15) + 1
-    if total_page < page:
-        return json.dumps({"status": "error"})
-    if page == total_page:
-        result = result[((page - 1) * 15):]
-    else:
-        result = result[((page - 1) * 15):(page * 15)]
-    return json.dumps({"status": "ok", "result": result}, cls=ComplexEncoder)
+    return cut_messages_in_page(result, page)
 
 
 @app.route('/api/get_private_chat_messages', methods=['GET'])
@@ -161,14 +165,7 @@ def get_private_chat_messages():
     params = (name1, name2, name2, name1)
     g.mydb.cursor.execute(query, params)
     result = g.mydb.cursor.fetchall()
-    total_page = int(len(result) / 15) + 1
-    if total_page < page:
-        return json.dumps({"status": "error"})
-    if page == total_page:
-        result = result[((page - 1) * 15):]
-    else:
-        result = result[((page - 1) * 15):(page * 15)]
-    return json.dumps({"status": "ok", "result": result}, cls=ComplexEncoder)
+    return cut_messages_in_page(result, page)
 
 
 if __name__ == '__main__':
