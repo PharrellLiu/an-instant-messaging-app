@@ -16,7 +16,6 @@
         app:srlPrimaryColor="#00000000"
         app:srlEnablePreviewInEditMode="true">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chat_recycler_view"
             android:layout_width="match_parent"
