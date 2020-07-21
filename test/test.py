@@ -1,4 +1,40 @@
 import requests
+import mysql.connector
 
-r = requests.get('http://192.168.0.102:5000/api/get_private_chat_messages?name1=lbw&name2=root&page=1')
+
+class MyDatabase:
+    conn = None
+    cursor = None
+
+    def __init__(self):
+        self.connect()
+        return
+
+    def connect(self):
+        self.conn = mysql.connector.connect(
+            host="localhost",
+            port=3306,
+            user="dbuser",
+            password="password",
+            database="iems5722",
+        )
+        self.cursor = self.conn.cursor(dictionary=True)
+        return
+
+
+'''mydb = MyDatabase()
+query = 'INSERT INTO chatroom_messages (chatroom,name, message,message_time) VALUES (%s, %s,%s,default);'
+params = ("room1", "root", "password")
+mydb.cursor.execute(query, params)
+query = "SELECT @@IDENTITY;"
+mydb.cursor.execute(query)
+result = mydb.cursor.fetchall()
+mydb.conn.commit()
+
+
+
+
+print(type(result[0]['@@IDENTITY']))'''
+r = requests.post('http://192.168.0.100:5000/api/post_private_chat_message',
+                  data={"receivename": "root", "sendname": "root", "message": "tessss"})
 print(r.text)
