@@ -65,7 +65,7 @@ public class PrivateChatFragment extends Fragment {
         MyApp myApp = (MyApp) getActivity().getApplication();
         final String userName = myApp.getName();
 
-        RequestParams params = new RequestParams(URLCollection.GET_FRI_LIST_URL);
+        RequestParams params = new RequestParams(URLCollection.GET_FRI_LIST);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {

@@ -63,7 +63,7 @@ public class ChatroomFragment extends Fragment {
         MyApp myApp = (MyApp) getActivity().getApplication();
         String userName = myApp.getName();
 
-        String url = URLCollection.GET_CHATROOM_LIST_URL + userName;
+        String url = URLCollection.GET_CHATROOM_LIST + userName;
         RequestParams params = new RequestParams(url);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override

@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         if (name.length() == 0 || password.length() == 0){
             Toast.makeText(x.app(), "input something",Toast.LENGTH_SHORT).show();
         } else {
-            RequestParams params = new RequestParams(URLCollection.LOGIN_URL);
+            RequestParams params = new RequestParams(URLCollection.LOGIN);
             params.addBodyParameter("name", name);
             params.addBodyParameter("password", password);
             x.http().post(params, new Callback.CommonCallback<String>() {
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         if (name.length() == 0 || password.length() == 0){
             Toast.makeText(x.app(), "input something",Toast.LENGTH_SHORT).show();
         } else {
-            RequestParams params = new RequestParams(URLCollection.REGISTER_URL);
+            RequestParams params = new RequestParams(URLCollection.REGISTER);
             params.addBodyParameter("name", name);
             params.addBodyParameter("password", password);
             x.http().post(params, new Callback.CommonCallback<String>() {
