@@ -48,15 +48,14 @@ public class ChatroomFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chatroom_fragment, container, false);
-        myDataset.add("default chatroom");
+
         mContext = getActivity();
+        // init recycler view
         recyclerView = view.findViewById(R.id.chatroom_recycler_view);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
-        // use a linear layout manager
         layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
+        myDataset.add("default_chatroom");
         mAdapter = new ButtonAdapterOfChatroomAndPrivateChat(myDataset,mContext,1);
         recyclerView.setAdapter(mAdapter);
 
@@ -81,15 +80,11 @@ public class ChatroomFragment extends Fragment {
                 }
             }
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+            public void onError(Throwable ex, boolean isOnCallback) { Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show(); }
             @Override
-            public void onCancelled(CancelledException cex) {
-            }
+            public void onCancelled(CancelledException cex) {}
             @Override
-            public void onFinished() {
-            }
+            public void onFinished() {}
         });
 
         return view;
