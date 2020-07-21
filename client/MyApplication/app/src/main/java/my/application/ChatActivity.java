@@ -46,7 +46,7 @@ public class ChatActivity extends AppCompatActivity {
     @ViewInject(R.id.button_send)
     private Button button_send;
 
-    private int page;
+    private String messageTimeLine;
     private String url;
     private int isChatroom;
     private String nameOfChatroomOrFri;
@@ -56,100 +56,111 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(ChatActivity.this);
-        Intent intent = getIntent();
-        isChatroom = intent.getIntExtra("isChatroom",-1);
-        nameOfChatroomOrFri = intent.getStringExtra("nameOfChatroomOrFri");
-        this.setTitle(nameOfChatroomOrFri);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // get the information, if now is chatroom or private chat, and the name of friend or chatroom
+        Intent intent = getIntent();
+        isChatroom = intent.getIntExtra("isChatroom",-1);
+        nameOfChatroomOrFri = intent.getStringExtra("nameOfChatroomOrFri");
+        this.setTitle(nameOfChatroomOrFri);
+
+        // init recycler view
         recyclerView.setHasFixedSize(true);
-        // use a linear layout manager
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new ChatMessageAdapter(myDataset);
         recyclerView.setAdapter(mAdapter);
 
-        page = 1;
+        // init the messageTimeLine, as there is no messages here
+        // messageTimeLine is uesd to load more messages, based on the messageTimeLine, server selects the previous messages that have not been loaded
+        messageTimeLine = "0";
+
         MyApp myApp = (MyApp) getApplication();
         userName = myApp.getName();
+
+        // init the url, to chatroom or private chat
         if (isChatroom == 1) {
-            url = URLCollection.GET_CHATROOM_MESSAGES + page + "&chatroom=" + nameOfChatroomOrFri;
+            url = URLCollection.GET_CHATROOM_MESSAGES;
         } else {
-            url = URLCollection.GET_PRIVATE_CHAT_MESSAGES + page + "&name1=" + nameOfChatroomOrFri + "&name2=" + userName;
+            url = URLCollection.GET_PRIVATE_CHAT_MESSAGES;
         }
 
+        // post's content
         RequestParams params = new RequestParams(url);
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        params.addBodyParameter("messageTimeLine",messageTimeLine);
+        if (isChatroom == 1) {
+            params.addBodyParameter("chatroom",nameOfChatroomOrFri);
+        } else {
+            params.addBodyParameter("name1",nameOfChatroomOrFri);
+            params.addBodyParameter("name2",userName);
+        }
+
+        // acquire initial messages
+        x.http().post(params, new Callback.CommonCallback<String>() {
                 @Override
                 public void onSuccess(String result) {
                     try {
                         if (setChatMessage(result,isChatroom,userName)){
                             mAdapter.notifyDataSetChanged();
+                            messageTimeLine = myDataset.get(0).getTime();// record the last message's time
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
                 @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                public void onError(Throwable ex, boolean isOnCallback) { Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show(); }
                 @Override
-                public void onCancelled(CancelledException cex) {
-                }
+                public void onCancelled(CancelledException cex) {}
                 @Override
-                public void onFinished() {
-                }
+                public void onFinished() {}
         });
 
+        // the load more function
+        // since the refresh layout has named the scrolling up function as refresh
+        // therefore, although the name of the method is refresh, the real function is to load more messages
         mRefreshLayout.setEnableRefresh(true);
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshlayout) {
-                page++;
-                if (isChatroom == 1) {
-                    url = URLCollection.GET_CHATROOM_MESSAGES + page + "&chatroom=" + nameOfChatroomOrFri;
-                } else {
-                    url = URLCollection.GET_PRIVATE_CHAT_MESSAGES + page + "&name1=" + nameOfChatroomOrFri + "&name2=" + userName;
-                }
                 RequestParams params = new RequestParams(url);
-                x.http().get(params, new Callback.CommonCallback<String>() {
+                params.addBodyParameter("messageTimeLine",messageTimeLine);
+                if (isChatroom == 1) {
+                    params.addBodyParameter("chatroom",nameOfChatroomOrFri);
+                } else {
+                    params.addBodyParameter("name1",nameOfChatroomOrFri);
+                    params.addBodyParameter("name2",userName);
+                }
+                x.http().post(params, new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
                         try {
-                            if (setChatMessage(result,isChatroom,userName)){
+                            if (setChatMessage(result,isChatroom,userName)) {
                                 mAdapter.notifyDataSetChanged();
-                            } else {
-                                page--;
+                                messageTimeLine = myDataset.get(0).getTime(); // record the last message's time
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                     @Override
-                    public void onError(Throwable ex, boolean isOnCallback) {
-                        Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                    public void onError(Throwable ex, boolean isOnCallback) { Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show(); }
                     @Override
-                    public void onCancelled(CancelledException cex) {
-                    }
+                    public void onCancelled(CancelledException cex) {}
                     @Override
-                    public void onFinished() {
-                    }
+                    public void onFinished() {}
                 });
                 refreshlayout.finishRefresh();
             }
         });
 
-
-
     }
 
+    // this method is to set the message, filter the content we need and set to the messages' list
     public boolean setChatMessage(String result, int isChatroom, String username) throws JSONException {
         JSONObject jsonObject = new JSONObject(result);
         String status = jsonObject.getString("status");
@@ -186,6 +197,7 @@ public class ChatActivity extends AppCompatActivity {
         return false;
     }
 
+    // send message
     @Event(value = R.id.button_send)
     private void onClickSendButton(View view) {
         final String message = input_edittext.getText().toString();
@@ -210,22 +222,27 @@ public class ChatActivity extends AppCompatActivity {
             x.http().post(params, new Callback.CommonCallback<String>() {
                 @Override
                 public void onSuccess(String result) {
-
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String message_time = jsonObject.getString("message_time");
+                        myDataset.add(new ChatMessageAdapter.ChatMessage(userName, message_time,message,1));
+                        mAdapter.notifyDataSetChanged();
+                        input_edittext.setText("");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
                 @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                public void onError(Throwable ex, boolean isOnCallback) { Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show(); }
                 @Override
-                public void onCancelled(CancelledException cex) {
-                }
+                public void onCancelled(CancelledException cex) {}
                 @Override
-                public void onFinished() {
-                }
+                public void onFinished() {}
             });
         }
     }
 
+    // the return button on the action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
