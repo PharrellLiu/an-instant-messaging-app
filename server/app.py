@@ -64,16 +64,20 @@ def teardown_request(exception):
     return
 
 
-def is_name_exist_in_register(name):
-    query = "SELECT * FROM login WHERE name = %s"
-    params = (name,)
-    g.mydb.cursor.execute(query, params)
-    if len(g.mydb.cursor.fetchall()) == 0:
-        return False
-    return True
+########################################################################################################################
+@app.route('/api/login', methods=['POST'])
+def login():
+    password = request.values.get("password")
+    name = request.values.get("name")
+    result = is_name_exist_and_password_correct_in_login(name, password)
+    if result == 0:
+        return json.dumps({"status": "error", "message": "no such name"})
+    if result == 1:
+        return json.dumps({"status": "error", "message": "wrong password"})
+    return json.dumps({"status": "ok"})
 
 
-def is_name_exist_in_login_and_password_correct(name, password):
+def is_name_exist_and_password_correct_in_login(name, password):
     query = "SELECT * FROM login WHERE name = %s"
     params = (name,)
     g.mydb.cursor.execute(query, params)
@@ -85,37 +89,7 @@ def is_name_exist_in_login_and_password_correct(name, password):
     return 1
 
 
-def write_in_login(name, password):
-    query = "INSERT INTO login (name, password) VALUES (%s, %s)"
-    params = (name, password)
-    g.mydb.cursor.execute(query, params)
-    g.mydb.conn.commit()
-    return
-
-
-def cut_messages_in_page(result, page):
-    total_page = int(len(result) / 15) + 1
-    if total_page < page:
-        return json.dumps({"status": "error"})
-    if page == total_page:
-        result = result[((page - 1) * 15):]
-    else:
-        result = result[((page - 1) * 15):(page * 15)]
-    return json.dumps({"status": "ok", "result": result}, cls=ComplexEncoder)
-
-
-@app.route('/api/login', methods=['POST'])
-def login():
-    password = request.values.get("password")
-    name = request.values.get("name")
-    result = is_name_exist_in_login_and_password_correct(name, password)
-    if result == 0:
-        return json.dumps({"status": "error", "message": "no such name"})
-    if result == 1:
-        return json.dumps({"status": "error", "message": "wrong password"})
-    return json.dumps({"status": "ok"})
-
-
+########################################################################################################################
 @app.route('/api/register', methods=['POST'])
 def register():
     password = request.values.get("password")
@@ -126,6 +100,24 @@ def register():
     return json.dumps({"status": "ok"})
 
 
+def is_name_exist_in_register(name):
+    query = "SELECT * FROM login WHERE name = %s"
+    params = (name,)
+    g.mydb.cursor.execute(query, params)
+    if len(g.mydb.cursor.fetchall()) == 0:
+        return False
+    return True
+
+
+def write_in_login(name, password):
+    query = "INSERT INTO login (name, password) VALUES (%s, %s)"
+    params = (name, password)
+    g.mydb.cursor.execute(query, params)
+    g.mydb.conn.commit()
+    return
+
+
+########################################################################################################################
 @app.route('/api/get_fri_list', methods=['GET'])
 def get_fri_list():
     query = "SELECT name FROM login ORDER BY name asc"
@@ -144,29 +136,84 @@ def get_chatroom_list():
     return json.dumps({"result": result})
 
 
-@app.route('/api/get_chatroom_messages', methods=['GET'])
+########################################################################################################################
+@app.route('/api/get_chatroom_messages', methods=['POST'])
 def get_chatroom_messages():
     chatroom = request.values.get("chatroom")
-    page = int(request.values.get("page"))
-    query = '''SELECT * FROM chatroom_messages WHERE chatroom = %s ORDER BY id DESC'''
-    params = (chatroom,)
+    messageTimeLine = request.values.get("messageTimeLine")
+    if messageTimeLine == '0':
+        query = '''SELECT * FROM chatroom_messages WHERE chatroom = %s ORDER BY id DESC'''
+        params = (chatroom,)
+    else:
+        query = '''SELECT * FROM chatroom_messages WHERE chatroom = %s and message_time < %s ORDER BY id DESC'''
+        params = (chatroom, messageTimeLine)
     g.mydb.cursor.execute(query, params)
     result = g.mydb.cursor.fetchall()
-    return cut_messages_in_page(result, page)
+    return cut_messages(result)
 
 
-@app.route('/api/get_private_chat_messages', methods=['GET'])
+def cut_messages(result):
+    if len(result) >= 15:
+        result = result[:15]
+    return json.dumps({"status": "ok", "result": result}, cls=ComplexEncoder)
+
+
+@app.route('/api/get_private_chat_messages', methods=['POST'])
 def get_private_chat_messages():
     name1 = request.values.get("name1")
     name2 = request.values.get("name2")
-    page = int(request.values.get("page"))
-    query = '''SELECT * FROM private_chat_messages 
+    messageTimeLine = request.values.get("messageTimeLine")
+    if messageTimeLine == '0':
+        query = '''SELECT * FROM private_chat_messages 
             WHERE (sendname = %s and receivename = %s) or (sendname = %s and receivename = %s) ORDER BY id DESC'''
-    params = (name1, name2, name2, name1)
+        params = (name1, name2, name2, name1)
+    else:
+        query = '''SELECT * FROM private_chat_messages 
+                    WHERE ((sendname = %s and receivename = %s) or (sendname = %s and receivename = %s)) 
+                    and message_time < %s ORDER BY id DESC'''
+        params = (name1, name2, name2, name1, messageTimeLine)
     g.mydb.cursor.execute(query, params)
     result = g.mydb.cursor.fetchall()
-    return cut_messages_in_page(result, page)
+    return cut_messages(result)
 
 
+########################################################################################################################
+@app.route('/api/post_private_chat_message', methods=['POST'])
+def post_private_chat_message():
+    sendname = request.values.get("sendname")
+    receivename = request.values.get("receivename")
+    message = request.values.get("message")
+    return post_message(receivename, sendname, message, 0)
+
+
+def post_message(chatroom_or_receivename, name, message, is_chatroom):
+    if is_chatroom == 1:  # chatroom
+        query1 = 'INSERT INTO chatroom_messages (chatroom, name, message, message_time) VALUES (%s, %s, %s, default);'
+        query2 = "SELECT message_time FROM chatroom_messages where id = %s"
+    else:  # private chat
+        query1 = 'INSERT INTO private_chat_messages (receivename, sendname, message, message_time) VALUES (%s, %s, %s, default);'
+        query2 = "SELECT message_time FROM private_chat_messages where id = %s"
+    params = (chatroom_or_receivename, name, message)
+    g.mydb.cursor.execute(query1, params)
+    query = "SELECT @@IDENTITY;"
+    g.mydb.cursor.execute(query)
+    result = g.mydb.cursor.fetchall()
+    g.mydb.conn.commit()
+    id = str(result[0]["@@IDENTITY"])
+    params = (id,)
+    g.mydb.cursor.execute(query2, params)
+    result = g.mydb.cursor.fetchall()
+    return json.dumps(result[0], cls=ComplexEncoder)
+
+
+@app.route('/api/post_chatroom_message', methods=['POST'])
+def post_chatroom_message():
+    chatroom = request.values.get("chatroom")
+    name = request.values.get("name")
+    message = request.values.get("message")
+    return post_message(chatroom, name, message, 1)
+
+
+########################################################################################################################
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)
