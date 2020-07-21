@@ -78,7 +78,7 @@ def login():
 
 
 def is_name_exist_and_password_correct_in_login(name, password):
-    query = "SELECT * FROM login WHERE name = %s"
+    query = '''SELECT * FROM login WHERE name = %s'''
     params = (name,)
     g.mydb.cursor.execute(query, params)
     result = g.mydb.cursor.fetchall()
@@ -101,7 +101,7 @@ def register():
 
 
 def is_name_exist_in_register(name):
-    query = "SELECT * FROM login WHERE name = %s"
+    query = '''SELECT * FROM login WHERE name = %s'''
     params = (name,)
     g.mydb.cursor.execute(query, params)
     if len(g.mydb.cursor.fetchall()) == 0:
@@ -110,7 +110,7 @@ def is_name_exist_in_register(name):
 
 
 def write_in_login(name, password):
-    query = "INSERT INTO login (name, password) VALUES (%s, %s)"
+    query = '''INSERT INTO login (name, password) VALUES (%s, %s)'''
     params = (name, password)
     g.mydb.cursor.execute(query, params)
     g.mydb.conn.commit()
@@ -120,7 +120,7 @@ def write_in_login(name, password):
 ########################################################################################################################
 @app.route('/api/get_fri_list', methods=['GET'])
 def get_fri_list():
-    query = "SELECT name FROM login ORDER BY name asc"
+    query = '''SELECT name FROM login ORDER BY name asc'''
     g.mydb.cursor.execute(query)
     result = g.mydb.cursor.fetchall()
     return json.dumps({"result": result})
@@ -129,7 +129,7 @@ def get_fri_list():
 @app.route('/api/get_chatroom_list', methods=['GET'])
 def get_chatroom_list():
     name = request.values.get("name")
-    query = "SELECT chatroom FROM chatrooms WHERE name = %s ORDER BY chatroom asc"
+    query = '''SELECT chatroom FROM chatrooms WHERE name = %s ORDER BY chatroom asc'''
     params = (name,)
     g.mydb.cursor.execute(query, params)
     result = g.mydb.cursor.fetchall()
@@ -188,11 +188,11 @@ def post_private_chat_message():
 
 def post_message(chatroom_or_receivename, name, message, is_chatroom):
     if is_chatroom == 1:  # chatroom
-        query1 = 'INSERT INTO chatroom_messages (chatroom, name, message, message_time) VALUES (%s, %s, %s, default);'
-        query2 = "SELECT message_time FROM chatroom_messages where id = %s"
+        query1 = '''INSERT INTO chatroom_messages (chatroom, name, message, message_time) VALUES (%s, %s, %s, default);'''
+        query2 = '''SELECT message_time FROM chatroom_messages where id = %s'''
     else:  # private chat
-        query1 = 'INSERT INTO private_chat_messages (receivename, sendname, message, message_time) VALUES (%s, %s, %s, default);'
-        query2 = "SELECT message_time FROM private_chat_messages where id = %s"
+        query1 = '''INSERT INTO private_chat_messages (receivename, sendname, message, message_time) VALUES (%s, %s, %s, default);'''
+        query2 = '''SELECT message_time FROM private_chat_messages where id = %s'''
     params = (chatroom_or_receivename, name, message)
     g.mydb.cursor.execute(query1, params)
     query = "SELECT @@IDENTITY;"
