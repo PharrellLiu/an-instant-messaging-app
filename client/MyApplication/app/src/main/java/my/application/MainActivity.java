@@ -52,13 +52,13 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         String status = jsonObject.getString("status");
-                        if (status.equals("ok")){
+                        if (status.equals("ok")){ // succeed
                             Toast.makeText(x.app(), "welcome", Toast.LENGTH_SHORT).show();
                             MyApp myApp = (MyApp) getApplication();
                             myApp.setName(name);
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             startActivity(intent);
-                        } else {
+                        } else { // show the error
                             Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
@@ -66,15 +66,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                public void onError(Throwable ex, boolean isOnCallback) { Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show(); }
                 @Override
-                public void onCancelled(CancelledException cex) {
-                }
+                public void onCancelled(CancelledException cex) {}
                 @Override
-                public void onFinished() {
-                }
+                public void onFinished() {}
             });
         }
     }
@@ -95,13 +91,13 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         String status = jsonObject.getString("status");
-                        if (status.equals("ok")){
+                        if (status.equals("ok")){ // succeed
                             Toast.makeText(x.app(), "welcome", Toast.LENGTH_SHORT).show();
                             MyApp myApp = (MyApp) getApplication();
                             myApp.setName(name);
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             startActivity(intent);
-                        } else {
+                        } else {  // show the error
                             Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
@@ -109,15 +105,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                public void onError(Throwable ex, boolean isOnCallback) { Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show(); }
                 @Override
-                public void onCancelled(CancelledException cex) {
-                }
+                public void onCancelled(CancelledException cex) {}
                 @Override
-                public void onFinished() {
-                }
+                public void onFinished() {}
             });
         }
     }
