@@ -22,5 +22,5 @@
         android:name="my.application.ui.moment.MomentFragment"
         android:label="moment"
         tools:layout="@layout/moment_fragment" />
-    
+
 </navigation>
