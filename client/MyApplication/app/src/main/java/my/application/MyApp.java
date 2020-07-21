@@ -5,6 +5,7 @@ import android.app.Application;
 import org.xutils.x;
 
 public class MyApp extends Application {
+    // the user's name
     private String name;
 
     @Override
