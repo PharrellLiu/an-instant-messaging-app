@@ -51,6 +51,8 @@ public class ChatActivity extends AppCompatActivity {
     private int isChatroom;
     private String nameOfChatroomOrFri;
     private String userName;
+    // if it is the init of a new chatroom, when we press the back button, it should not back to create new chatroom activity but home activity
+    private int isNewChatroom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // get the information, if now is chatroom or private chat, and the name of friend or chatroom
         Intent intent = getIntent();
+        isNewChatroom = intent.getIntExtra("isNewChatroom",-1);
         isChatroom = intent.getIntExtra("isChatroom",-1);
         nameOfChatroomOrFri = intent.getStringExtra("nameOfChatroomOrFri");
         this.setTitle(nameOfChatroomOrFri);
@@ -247,7 +250,13 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            this.finish();
+            if (isNewChatroom == 1){
+                Intent intent = new Intent(ChatActivity.this, HomeActivity.class);
+                startActivity(intent);
+            } else {
+                this.finish();
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -41,6 +41,7 @@ public class ButtonAdapterOfChatroomAndPrivateChat extends RecyclerView.Adapter<
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext,ChatActivity.class);
+                intent.putExtra("isNewChatroom",0);// if it is the init of a new chatroom, when we press the back button, it should not back to create new chatroom activity but home activity
                 intent.putExtra("isChatroom",isChatroom);
                 intent.putExtra("nameOfChatroomOrFri",nameOfChatroomOrFri);
                 mContext.startActivity(intent);

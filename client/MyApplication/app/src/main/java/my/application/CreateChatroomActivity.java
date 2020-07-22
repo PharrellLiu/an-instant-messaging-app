@@ -1,5 +1,6 @@
 package my.application;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -121,7 +122,7 @@ public class CreateChatroomActivity extends AppCompatActivity {
         if (len == 0){
             Toast.makeText(x.app(), "choose someone", Toast.LENGTH_SHORT).show();
         } else {
-            String chatroomName = edittext_create_chatroom_name.getText().toString();
+            final String chatroomName = edittext_create_chatroom_name.getText().toString();
             if (chatroomName.length() == 0){
                 Toast.makeText(x.app(), "input chatroom name", Toast.LENGTH_SHORT).show();
             } else {
@@ -141,7 +142,19 @@ public class CreateChatroomActivity extends AppCompatActivity {
                 x.http().post(params, new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
-                        System.out.println(result);
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            String status = jsonObject.getString("status");
+                            if (status.equals("ok")){
+                                Intent intent = new Intent(CreateChatroomActivity.this,ChatActivity.class);
+                                intent.putExtra("isNewChatroom",1);// if it is the init of a new chatroom, when we press the back button, it should not back to create new chatroom activity but home activity
+                                intent.putExtra("isChatroom",1);
+                                intent.putExtra("nameOfChatroomOrFri",chatroomName);
+                                startActivity(intent);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) { Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show(); }
