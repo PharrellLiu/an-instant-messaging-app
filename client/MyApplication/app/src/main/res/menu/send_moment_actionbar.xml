@@ -7,4 +7,5 @@
         android:icon="@drawable/camera_create"
         app:showAsAction="always"
         android:title="send_moment" />
+
 </menu>

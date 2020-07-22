@@ -39,7 +39,7 @@ public class MomentFragment extends Fragment {
         setHasOptionsMenu(true);
         return view;
     }
-    
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.send_moment_actionbar,menu);
