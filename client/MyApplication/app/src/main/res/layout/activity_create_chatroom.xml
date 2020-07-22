@@ -27,7 +27,6 @@
             android:text="Chatroom's Name"
             android:layout_gravity="center|start"/>
 
-
         <EditText
             android:id="@+id/edittext_create_chatroom_name"
             android:layout_width="0dp"
@@ -37,7 +36,6 @@
             android:textSize="15sp"
             android:layout_gravity="center|start"
             android:hint="Type Chatroom's Name"/>
-
 
     </LinearLayout>
 
