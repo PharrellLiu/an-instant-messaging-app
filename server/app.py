@@ -215,5 +215,21 @@ def post_chatroom_message():
 
 
 ########################################################################################################################
+@app.route('/api/create_chatroom', methods=['POST'])
+def create_chatroom():
+    chatroom = request.values.get("chatroomName")
+    users = request.values.get("chosenUsers")
+    users = users[2:]
+    users = users[:-2]
+    users = users.split('","')
+    query = '''INSERT INTO chatrooms (chatroom, name) VALUES (%s, %s);'''
+    for i in users:
+        params = (chatroom, i)
+        g.mydb.cursor.execute(query, params)
+        g.mydb.conn.commit()
+    return json.dumps({"status": "ok"})
+
+
+########################################################################################################################
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)
