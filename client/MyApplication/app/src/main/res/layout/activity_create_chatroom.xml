@@ -1,9 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateChatroomActivity">
+    android:layout_marginTop="10dp"
+    tools:context=".CreateChatroomActivity"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <TextView
+            android:id="@+id/textview_create_chatroom_name"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="3"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_create_name"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:text="Chatroom's Name"
+            android:layout_gravity="center|start"/>
+
+
+        <EditText
+            android:id="@+id/edittext_create_chatroom_name"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="4"
+            android:layout_marginRight="10dp"
+            android:textSize="15sp"
+            android:layout_gravity="center|start"
+            android:hint="Type Chatroom's Name"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <TextView
+            android:id="@+id/textview_chosen_list"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="3"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_create_name"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:text="Choose List"
+            android:layout_gravity="center|start"/>
+
+        <TextView
+            android:id="@+id/textview_chosen_num"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="4"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
+            android:textSize="13sp"
+            android:text="Selected: 0"
+            android:layout_gravity="center|start"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/create_chatroom_recycler_view"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp">
+
+        <Button
+            android:id="@+id/button_select_all"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1.5"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_create_btn"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="Select All"
+            android:layout_gravity="center|start"/>
+
+        <Button
+            android:id="@+id/button_deselect_all"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1.5"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_create_btn"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="Deselect All"
+            android:layout_gravity="center|start"/>
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_create_btn"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="Cancle"
+            android:layout_gravity="center|start"/>
+
+        <Button
+            android:id="@+id/button_confirm"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_create_btn"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="Confirm"
+            android:layout_gravity="center|start"/>
+
+    </LinearLayout>
+
+</LinearLayout>
