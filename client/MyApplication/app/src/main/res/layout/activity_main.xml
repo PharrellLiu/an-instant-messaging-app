@@ -52,6 +52,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="60dp"
+        android:background="@drawable/btn_login"
         android:text="login"
         android:textSize="15sp"
         android:textColor="#919191"/>
@@ -64,6 +65,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
+        android:background="@drawable/btn_login"
         android:text="register"
         android:textSize="15sp"
         android:textColor="#919191"/>
