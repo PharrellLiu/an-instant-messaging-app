@@ -56,7 +56,7 @@ public class ChatroomFragment extends Fragment {
         View view = inflater.inflate(R.layout.chatroom_fragment, container, false);
 
         mContext = getActivity();
-        
+
         // init recycler view
         recyclerView = view.findViewById(R.id.chatroom_recycler_view);
         recyclerView.setHasFixedSize(true);
