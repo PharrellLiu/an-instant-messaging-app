@@ -22,8 +22,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:divider="#0000"
-            android:dividerHeight="8dp"
-            android:scrollbars="none">
+            android:dividerHeight="8dp">
         </androidx.recyclerview.widget.RecyclerView>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
