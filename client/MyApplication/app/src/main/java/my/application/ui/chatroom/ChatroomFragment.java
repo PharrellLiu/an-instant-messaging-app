@@ -1,8 +1,10 @@
 package my.application.ui.chatroom;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -27,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.application.ButtonAdapterOfChatroomAndPrivateChat;
+import my.application.CreateChatroomActivity;
 import my.application.MyApp;
 import my.application.R;
 import my.application.URLCollection;
@@ -87,7 +93,25 @@ public class ChatroomFragment extends Fragment {
             public void onFinished() {}
         });
 
+        setHasOptionsMenu(true);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.create_chatroom_actionbar,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    // 设置Create Chatroom按钮
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_create_chatroom) {
+            Intent intent = new Intent();
+            intent.setClass(mContext, CreateChatroomActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
