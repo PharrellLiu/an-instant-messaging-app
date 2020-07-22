@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,8 +36,8 @@ public class ButtonAdapterOfChatroomAndPrivateChat extends RecyclerView.Adapter<
     @Override
     public void onBindViewHolder(@NonNull ButtonAdapterOfChatroomAndPrivateChat.ButtonViewHolderOfChatroomAndPrivateChat holder, final int position) {
         final String nameOfChatroomOrFri = mDataset.get(position);
-        holder.button.setText(nameOfChatroomOrFri);
-        holder.button.setOnClickListener(new View.OnClickListener() {
+        holder.textView.setText(nameOfChatroomOrFri);
+        holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext,ChatActivity.class);
@@ -54,10 +54,10 @@ public class ButtonAdapterOfChatroomAndPrivateChat extends RecyclerView.Adapter<
     }
 
     public static class ButtonViewHolderOfChatroomAndPrivateChat extends RecyclerView.ViewHolder {
-        public Button button;
+        public TextView textView;
         public ButtonViewHolderOfChatroomAndPrivateChat(@NonNull View itemView) {
             super(itemView);
-            button = itemView.findViewById(R.id.button_chatroom_and_private_chat);
+            textView = itemView.findViewById(R.id.textview_chatroom_and_private_chat);
         }
     }
 }

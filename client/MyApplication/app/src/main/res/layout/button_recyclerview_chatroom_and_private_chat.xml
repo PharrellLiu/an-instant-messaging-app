@@ -4,10 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
+    <TextView
+        android:id="@+id/textview_chatroom_and_private_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button_chatroom_and_private_chat">
-    </Button>
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:clickable="true"
+        android:textSize="16sp"
+        android:padding="13dp"/>
 
 </LinearLayout>
