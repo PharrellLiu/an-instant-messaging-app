@@ -151,6 +151,8 @@ public class CreateChatroomActivity extends AppCompatActivity {
                                 intent.putExtra("isChatroom",1);
                                 intent.putExtra("nameOfChatroomOrFri",chatroomName);
                                 startActivity(intent);
+                            } else {
+                                Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
