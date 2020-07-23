@@ -186,10 +186,12 @@ def post_private_chat_message():
 
 def post_message(chatroom_or_receivename, name, message, is_chatroom):
     if is_chatroom == 1:  # chatroom
-        query1 = '''INSERT INTO chatroom_messages (chatroom, name, message, message_time) VALUES (%s, %s, %s, default);'''
+        query1 = '''INSERT INTO chatroom_messages (chatroom, name, message, message_time) 
+                    VALUES (%s, %s, %s, default);'''
         query2 = '''SELECT message_time FROM chatroom_messages where id = %s'''
     else:  # private chat
-        query1 = '''INSERT INTO private_chat_messages (receivename, sendname, message, message_time) VALUES (%s, %s, %s, default);'''
+        query1 = '''INSERT INTO private_chat_messages (receivename, sendname, message, message_time) 
+                    VALUES (%s, %s, %s, default);'''
         query2 = '''SELECT message_time FROM private_chat_messages where id = %s'''
     params = (chatroom_or_receivename, name, message)
     g.mydb.cursor.execute(query1, params)
@@ -201,6 +203,7 @@ def post_message(chatroom_or_receivename, name, message, is_chatroom):
     params = (id,)
     g.mydb.cursor.execute(query2, params)
     result = g.mydb.cursor.fetchall()
+
     return json.dumps(result[0], cls=ComplexEncoder)
 
 

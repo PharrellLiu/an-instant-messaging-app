@@ -5,6 +5,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+
 @socketio.on('join')
 def on_join(data):
     join_room(data)
@@ -13,6 +14,7 @@ def on_join(data):
 @socketio.on('leave')
 def on_leave(data):
     leave_room(data)
+
 
 @socketio.on('connect')
 def connect_handler():
