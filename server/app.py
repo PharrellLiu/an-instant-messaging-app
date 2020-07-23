@@ -2,7 +2,7 @@ import json
 import mysql.connector
 from flask import Flask, g, request
 from datetime import date, datetime
-from redis import StrictRedis
+import requests
 
 
 class ComplexEncoder(json.JSONEncoder):
@@ -204,7 +204,9 @@ def post_message(chatroom_or_receivename, name, message, is_chatroom):
     params = (id,)
     g.mydb.cursor.execute(query2, params)
     result = g.mydb.cursor.fetchall()
-
+    push = requests.post("http://192.168.0.100:8001/api/broadcast",
+                         data={"is_chatroom": str(is_chatroom), "chatroom_or_receivename": chatroom_or_receivename,
+                               "message": message, "message_time": result[0]['message_time']})
     return json.dumps(result[0], cls=ComplexEncoder)
 
 
