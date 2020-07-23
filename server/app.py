@@ -1,8 +1,6 @@
 import json
 import mysql.connector
-from flask import Flask
-from flask import g
-from flask import request
+from flask import Flask, g, request
 from datetime import date, datetime
 
 
@@ -218,6 +216,8 @@ def post_chatroom_message():
 @app.route('/api/create_chatroom', methods=['POST'])
 def create_chatroom():
     chatroom = request.values.get("chatroomName")
+    if is_chatroom_exist(chatroom):
+        return json.dumps({"status": "error", "message": "chatroom already exists"})
     users = request.values.get("chosenUsers")
     users = users[2:]
     users = users[:-2]
@@ -228,6 +228,15 @@ def create_chatroom():
         g.mydb.cursor.execute(query, params)
         g.mydb.conn.commit()
     return json.dumps({"status": "ok"})
+
+
+def is_chatroom_exist(chatroom):
+    query = '''SELECT * FROM chatrooms WHERE chatroom = %s'''
+    params = (chatroom,)
+    g.mydb.cursor.execute(query, params)
+    if len(g.mydb.cursor.fetchall()) == 0:
+        return False
+    return True
 
 
 ########################################################################################################################

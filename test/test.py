@@ -1,8 +1,8 @@
-import requests
-import mysql.connector
+#import requests
+#import mysql.connector
 
 
-class MyDatabase:
+'''class MyDatabase:
     conn = None
     cursor = None
 
@@ -19,7 +19,7 @@ class MyDatabase:
             database="iems5722",
         )
         self.cursor = self.conn.cursor(dictionary=True)
-        return
+        return'''
 
 
 '''mydb = MyDatabase()
