@@ -2,6 +2,7 @@ import json
 import mysql.connector
 from flask import Flask, g, request
 from datetime import date, datetime
+from redis import StrictRedis
 
 
 class ComplexEncoder(json.JSONEncoder):
