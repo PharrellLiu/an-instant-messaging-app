@@ -153,7 +153,7 @@ def get_chatroom_messages():
 def cut_messages(result):
     if len(result) >= 15:
         result = result[:15]
-    return json.dumps({"status": "ok", "result": result}, cls=ComplexEncoder)
+    return json.dumps({"result": result}, cls=ComplexEncoder)
 
 
 @app.route('/api/get_private_chat_messages', methods=['POST'])

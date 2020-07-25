@@ -111,10 +111,9 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(String result) {
                     try {
-                        if (setChatMessage(result,isChatroom,userName)){
-                            mAdapter.notifyDataSetChanged();
-                            messageTimeLine = myDataset.get(0).getTime();// record the last message's time
-                        }
+                        setChatMessage(result,isChatroom,userName);
+                        mAdapter.notifyDataSetChanged();
+                        messageTimeLine = myDataset.get(0).getTime(); // record the last message's time
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -146,10 +145,9 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String result) {
                         try {
-                            if (setChatMessage(result,isChatroom,userName)) {
-                                mAdapter.notifyDataSetChanged();
-                                messageTimeLine = myDataset.get(0).getTime(); // record the last message's time
-                            }
+                            setChatMessage(result,isChatroom,userName);
+                            mAdapter.notifyDataSetChanged();
+                            messageTimeLine = myDataset.get(0).getTime(); // record the last message's time
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -168,40 +166,35 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     // this method is to set the message, filter the content we need and set to the messages' list
-    public boolean setChatMessage(String result, int isChatroom, String username) throws JSONException {
+    public void setChatMessage(String result, int isChatroom, String username) throws JSONException {
         JSONObject jsonObject = new JSONObject(result);
-        String status = jsonObject.getString("status");
-        if (status.equals("ok")){
-            JSONArray jsonArray = jsonObject.getJSONArray("result");
-            int len = jsonArray.length();
-            if (isChatroom == 1) {
-                for (int i = 0; i<len; i++){
-                    JSONObject temp = jsonArray.getJSONObject(i);
-                    String name = temp.getString("name");
-                    if (name.equals(username)){
-                        myDataset.add(0, new ChatMessageAdapter.ChatMessage(name,temp.getString("message_time"),
-                                temp.getString("message"),1));
-                    } else {
-                        myDataset.add(0, new ChatMessageAdapter.ChatMessage(name,temp.getString("message_time"),
-                                temp.getString("message"),0));
-                    }
-                }
-            } else {
-                for (int i = 0; i<len; i++){
-                    JSONObject temp = jsonArray.getJSONObject(i);
-                    String name = temp.getString("sendname");
-                    if (name.equals(username)){
-                        myDataset.add(0, new ChatMessageAdapter.ChatMessage(name,temp.getString("message_time"),
-                                temp.getString("message"),1));
-                    } else {
-                        myDataset.add(0, new ChatMessageAdapter.ChatMessage(name,temp.getString("message_time"),
-                                temp.getString("message"),0));
-                    }
+        JSONArray jsonArray = jsonObject.getJSONArray("result");
+        int len = jsonArray.length();
+        if (isChatroom == 1) {
+            for (int i = 0; i<len; i++){
+                JSONObject temp = jsonArray.getJSONObject(i);
+                String name = temp.getString("name");
+                if (name.equals(username)){
+                    myDataset.add(0, new ChatMessageAdapter.ChatMessage(name,temp.getString("message_time"),
+                            temp.getString("message"),1));
+                } else {
+                    myDataset.add(0, new ChatMessageAdapter.ChatMessage(name,temp.getString("message_time"),
+                            temp.getString("message"),0));
                 }
             }
-            return true;
+        } else {
+            for (int i = 0; i<len; i++){
+                JSONObject temp = jsonArray.getJSONObject(i);
+                String name = temp.getString("sendname");
+                if (name.equals(username)){
+                    myDataset.add(0, new ChatMessageAdapter.ChatMessage(name,temp.getString("message_time"),
+                            temp.getString("message"),1));
+                } else {
+                    myDataset.add(0, new ChatMessageAdapter.ChatMessage(name,temp.getString("message_time"),
+                            temp.getString("message"),0));
+                }
+            }
         }
-        return false;
     }
 
     // send message
