@@ -187,27 +187,16 @@ def post_private_chat_message():
 
 def post_message(chatroom_or_receivename, name, message, is_chatroom):
     if is_chatroom == 1:  # chatroom
-        query1 = '''INSERT INTO chatroom_messages (chatroom, name, message, message_time) 
+        query = '''INSERT INTO chatroom_messages (chatroom, name, message, message_time) 
                     VALUES (%s, %s, %s, default);'''
-        query2 = '''SELECT message_time FROM chatroom_messages where id = %s'''
     else:  # private chat
-        query1 = '''INSERT INTO private_chat_messages (receivename, sendname, message, message_time) 
+        query = '''INSERT INTO private_chat_messages (receivename, sendname, message, message_time) 
                     VALUES (%s, %s, %s, default);'''
-        query2 = '''SELECT message_time FROM private_chat_messages where id = %s'''
     params = (chatroom_or_receivename, name, message)
-    g.mydb.cursor.execute(query1, params)
-    query = "SELECT @@IDENTITY;"
-    g.mydb.cursor.execute(query)
-    result = g.mydb.cursor.fetchall()
+    g.mydb.cursor.execute(query, params)
     g.mydb.conn.commit()
-    id = str(result[0]["@@IDENTITY"])
-    params = (id,)
-    g.mydb.cursor.execute(query2, params)
-    result = g.mydb.cursor.fetchall()
-    push = requests.post("http://192.168.0.100:8001/api/broadcast",
-                         data={"is_chatroom": str(is_chatroom), "chatroom_or_receivename": chatroom_or_receivename,
-                               "message": message, "message_time": result[0]['message_time']})
-    return json.dumps(result[0], cls=ComplexEncoder)
+
+    return json.dumps({"status": "ok"})
 
 
 @app.route('/api/post_chatroom_message', methods=['POST'])
