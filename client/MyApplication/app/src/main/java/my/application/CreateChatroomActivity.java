@@ -167,7 +167,5 @@ public class CreateChatroomActivity extends AppCompatActivity {
                 });
             }
         }
-
-
     }
 }
