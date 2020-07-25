@@ -1,8 +1,7 @@
 import json
+from datetime import date, datetime
 import mysql.connector
 from flask import Flask, g, request
-from datetime import date, datetime
-import requests
 
 
 class ComplexEncoder(json.JSONEncoder):
