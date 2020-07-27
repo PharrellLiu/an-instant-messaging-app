@@ -27,10 +27,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @ContentView(R.layout.activity_chat)
@@ -226,9 +223,8 @@ public class ChatActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(result);
                         String status = jsonObject.getString("status");
                         if (status.equals("ok")) { // succeed
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");
-                            Date curDate = new Date(System.currentTimeMillis());
-                            myDataset.add(new ChatMessageAdapter.ChatMessage(userName, formatter.format(curDate),message,1));
+                            String messageTime = jsonObject.getString("message_time");
+                            myDataset.add(new ChatMessageAdapter.ChatMessage(userName, messageTime,message,1));
                             mAdapter.notifyDataSetChanged();
                             input_edittext.setText("");
                         }
