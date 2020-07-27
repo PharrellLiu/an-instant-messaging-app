@@ -9,6 +9,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +19,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import my.application.ButtonAdapterOfChatroomAndPrivateChat;
 import my.application.CreateChatroomActivity;
+import my.application.MomentAdapter;
 import my.application.R;
 import my.application.SendMomentActivity;
 
@@ -26,6 +37,13 @@ public class MomentFragment extends Fragment {
     private MomentViewModel mViewModel;
 
     private Context mContext;
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private List<MomentAdapter.Moment> myDataset = new ArrayList<MomentAdapter.Moment>();
+
+    private RefreshLayout mRefreshLayout;
 
     public static MomentFragment newInstance() {
         return new MomentFragment();
@@ -37,6 +55,38 @@ public class MomentFragment extends Fragment {
         View view = inflater.inflate(R.layout.moment_fragment, container, false);
         mContext = getActivity();
         setHasOptionsMenu(true);
+
+        mRefreshLayout = view.findViewById(R.id.moment_refreshLayout);
+        mRefreshLayout.setEnableRefresh(true);
+        mRefreshLayout.setEnableLoadMore(true);
+
+        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+
+            }
+        });
+
+        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+
+            }
+        });
+
+        recyclerView = view.findViewById(R.id.moment_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(mContext);
+        recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new MomentAdapter(myDataset,mContext);
+        recyclerView.setAdapter(mAdapter);
+
+        MomentAdapter.Moment moment = new MomentAdapter.Moment("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+                "content", "name", "time", 2);
+        myDataset.add(moment);
+
+        mAdapter.notifyDataSetChanged();
+
         return view;
     }
 
