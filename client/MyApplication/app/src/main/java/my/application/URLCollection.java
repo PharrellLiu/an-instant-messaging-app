@@ -11,4 +11,5 @@ public class URLCollection {
     public static final String POST_PRIVATE_CHAT_MESSAGE = URL + "/post_private_chat_message";
     public static final String POST_CHATROOM_MESSAGE = URL + "/post_chatroom_message";
     public static final String CREATE_CHATROOM = URL + "/create_chatroom";
+    public static final String SOCKETIO = "http://192.168.0.100:8001";
 }

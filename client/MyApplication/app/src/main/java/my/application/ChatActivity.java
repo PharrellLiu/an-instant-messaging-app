@@ -209,12 +209,11 @@ public class ChatActivity extends AppCompatActivity {
             }
             RequestParams params = new RequestParams(url);
             params.addBodyParameter("message",message);
+            params.addBodyParameter("sendname",userName);
             if (isChatroom == 1) {
                 params.addBodyParameter("chatroom",nameOfChatroomOrFri);
-                params.addBodyParameter("name",userName);
             } else {
                 params.addBodyParameter("receivename",nameOfChatroomOrFri);
-                params.addBodyParameter("sendname",userName);
             }
             x.http().post(params, new Callback.CommonCallback<String>() {
                 @Override
