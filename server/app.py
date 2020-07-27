@@ -205,10 +205,10 @@ def post_message(chatroom_or_receivename, sendname, message, is_chatroom):
     g.mydb.cursor.execute(query2, params)
     result = g.mydb.cursor.fetchall()
     message_time = result[0]['message_time']
-    push = requests.post("http://192.168.0.100:8001/api/broadcast",
+    push = requests.post("http://192.168.0.104:8001/api/broadcast",
                          data={"is_chatroom": str(is_chatroom), "chatroom_or_receivename": chatroom_or_receivename,
                                "message": message, "message_time": message_time, "sendname": sendname})
-    return json.dumps({"status": "ok", "message_time": message_time})
+    return json.dumps({"status": "ok", "message_time": message_time}, cls=ComplexEncoder)
 
 
 @app.route('/api/post_chatroom_message', methods=['POST'])
