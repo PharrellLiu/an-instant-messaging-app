@@ -3,6 +3,7 @@ package my.application;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -45,6 +46,8 @@ public class SendMomentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(SendMomentActivity.this);
+
+        this.setTitle("Send Moment");
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -105,6 +108,16 @@ public class SendMomentActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.send_moment_actionbar, menu);
+        return true;
+    }
+
+    public boolean isImageFile(String filePath) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+        if (options.outWidth == -1) {
+            return false;
+        }
         return true;
     }
 
