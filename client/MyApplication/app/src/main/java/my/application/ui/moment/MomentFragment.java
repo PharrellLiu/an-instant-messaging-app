@@ -80,7 +80,7 @@ public class MomentFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new MomentAdapter(myDataset,mContext);
         recyclerView.setAdapter(mAdapter);
-        
+
         return view;
     }
 
