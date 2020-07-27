@@ -80,13 +80,7 @@ public class MomentFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new MomentAdapter(myDataset,mContext);
         recyclerView.setAdapter(mAdapter);
-
-        MomentAdapter.Moment moment = new MomentAdapter.Moment("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
-                "content", "name", "time", 2);
-        myDataset.add(moment);
-
-        mAdapter.notifyDataSetChanged();
-
+        
         return view;
     }
 
