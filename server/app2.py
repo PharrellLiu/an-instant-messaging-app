@@ -43,6 +43,7 @@ def teardown_request(exception):
     return
 
 
+########################################################################################################################
 @app.route("/api/broadcast", methods=["POST"])
 def broadcast():
     is_chatroom = request.values.get("is_chatroom")
@@ -73,6 +74,7 @@ def push(data):
     emit('broadcast', data, room=receiver)
 
 
+########################################################################################################################
 @socketio.on('join')
 def on_join(data):
     join_room(data)
