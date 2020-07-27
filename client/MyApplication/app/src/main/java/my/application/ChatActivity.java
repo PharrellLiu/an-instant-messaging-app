@@ -276,4 +276,5 @@ public class ChatActivity extends AppCompatActivity {
         EventBus.getDefault().post(new EventBusMsg.ChatActivityEnd());
         EventBus.getDefault().unregister(this);
     }
+    
 }

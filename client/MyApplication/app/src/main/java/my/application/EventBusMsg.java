@@ -35,5 +35,4 @@ public class EventBusMsg {
         public String getMessageTime() { return this.messageTime; }
     }
 
-
 }
