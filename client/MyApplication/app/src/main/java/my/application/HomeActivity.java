@@ -136,4 +136,5 @@ public class HomeActivity extends AppCompatActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
 }
