@@ -185,7 +185,7 @@ def post_private_chat_message():
     return post_message(receivename, sendname, message, 0)
 
 
-def post_message(chatroom_or_receivename, name, message, is_chatroom):
+def post_message(chatroom_or_receivename, sendname, message, is_chatroom):
     if is_chatroom == 1:  # chatroom
         query = '''INSERT INTO chatroom_messages (chatroom, name, message, message_time) 
                     VALUES (%s, %s, %s, default);'''
@@ -194,7 +194,7 @@ def post_message(chatroom_or_receivename, name, message, is_chatroom):
         query = '''INSERT INTO private_chat_messages (receivename, sendname, message, message_time) 
                     VALUES (%s, %s, %s, default);'''
         query2 = '''SELECT message_time FROM private_chat_messages where id = %s'''
-    params = (chatroom_or_receivename, name, message)
+    params = (chatroom_or_receivename, sendname, message)
     g.mydb.cursor.execute(query, params)
     query = "SELECT @@IDENTITY;"
     g.mydb.cursor.execute(query)
@@ -207,16 +207,16 @@ def post_message(chatroom_or_receivename, name, message, is_chatroom):
     message_time = result[0]['message_time']
     push = requests.post("http://192.168.0.100:8001/api/broadcast",
                          data={"is_chatroom": str(is_chatroom), "chatroom_or_receivename": chatroom_or_receivename,
-                               "message": message, "message_time": message_time})
+                               "message": message, "message_time": message_time, "sendname": sendname})
     return json.dumps({"status": "ok", "message_time": message_time})
 
 
 @app.route('/api/post_chatroom_message', methods=['POST'])
 def post_chatroom_message():
     chatroom = request.values.get("chatroom")
-    name = request.values.get("name")
+    sendname = request.values.get("sendname")
     message = request.values.get("message")
-    return post_message(chatroom, name, message, 1)
+    return post_message(chatroom, sendname, message, 1)
 
 
 ########################################################################################################################
