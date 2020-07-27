@@ -16,6 +16,7 @@ android {
 
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -26,8 +27,16 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    google()
+}
+
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.3'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.exoplayer:exoplayer:2.10.3'
     implementation 'org.greenrobot:eventbus:3.2.0'
