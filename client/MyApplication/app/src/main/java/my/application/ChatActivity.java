@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,6 +74,9 @@ public class ChatActivity extends AppCompatActivity {
         isChatroom = intent.getIntExtra("isChatroom",-1);
         nameOfChatroomOrFri = intent.getStringExtra("nameOfChatroomOrFri");
         this.setTitle(nameOfChatroomOrFri);
+
+        EventBus.getDefault().register(this);
+        EventBus.getDefault().post(new EventBusMsg.ChatActivityStart(isChatroom,nameOfChatroomOrFri));
 
         // init recycler view
         recyclerView.setHasFixedSize(true);
@@ -194,6 +200,13 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPushMsgToChat(EventBusMsg.PushMsgToChat pushMsgToChat) {
+        myDataset.add(new ChatMessageAdapter.ChatMessage(pushMsgToChat.getSendName(),pushMsgToChat.getMessageTime(),
+                pushMsgToChat.getMessage(),0));
+        mAdapter.notifyDataSetChanged();
+    }
+
     // send message
     @Event(value = R.id.button_send)
     private void onClickSendButton(View view) {
@@ -245,6 +258,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            EventBus.getDefault().post(new EventBusMsg.ChatActivityEnd());
             if (isNewChatroom == 1){
                 Intent intent = new Intent(ChatActivity.this, HomeActivity.class);
                 startActivity(intent);
@@ -256,4 +270,10 @@ public class ChatActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().post(new EventBusMsg.ChatActivityEnd());
+        EventBus.getDefault().unregister(this);
+    }
 }
