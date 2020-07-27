@@ -73,10 +73,10 @@ public class HomeActivity extends AppCompatActivity {
             JSONObject jsonObject = (JSONObject)args[0];
             try {
                 int is_chatroom = Integer.parseInt(jsonObject.getString("is_chatroom"));
-                String chatroom_or_receivename = jsonObject.getString("chatroom_or_receivename");
-                String message = jsonObject.getString("message");
+                final String chatroom_or_receivename = jsonObject.getString("chatroom_or_receivename");
+                final String message = jsonObject.getString("message");
                 String message_time = jsonObject.getString("message_time");
-                String sendname = jsonObject.getString("sendname");
+                final String sendname = jsonObject.getString("sendname");
                 if (isChatActivityStart == 1){
                     if (is_chatroom == 1 && isChatroom == 1
                             && chatroom_or_receivename.equals(nameOfChatroomOrFri)){
@@ -84,18 +84,34 @@ public class HomeActivity extends AppCompatActivity {
                     } else if (is_chatroom == 0 && isChatroom == 0 && sendname.equals(nameOfChatroomOrFri)){
                         EventBus.getDefault().post(new EventBusMsg.PushMsgToChat(sendname, message,message_time));
                     } else {
+                        if (is_chatroom == 1){
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(x.app(), sendname + "said" + message + "in" + chatroom_or_receivename, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(x.app(), sendname + "said" + message + "to you", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    if (is_chatroom == 1){
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(x.app(), "You got a new message", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(x.app(), sendname + "said" + message + "in" + chatroom_or_receivename, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(x.app(), sendname + "said" + message + "to you", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
-                } else {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(x.app(), "You got a new message", Toast.LENGTH_SHORT).show();
-                        }
-                    });
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
