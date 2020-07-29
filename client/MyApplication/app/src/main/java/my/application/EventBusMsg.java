@@ -35,4 +35,8 @@ public class EventBusMsg {
         public String getMessageTime() { return this.messageTime; }
     }
 
+    public static class PostNewMoment {
+        public PostNewMoment() { }
+    }
+
 }

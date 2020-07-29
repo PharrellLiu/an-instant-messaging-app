@@ -22,6 +22,9 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import my.application.ChatMessageAdapter;
+import my.application.EventBusMsg;
 import my.application.MomentAdapter;
 import my.application.R;
 import my.application.SendMomentActivity;
@@ -63,6 +67,8 @@ public class MomentFragment extends Fragment {
         View view = inflater.inflate(R.layout.moment_fragment, container, false);
         mContext = getActivity();
         setHasOptionsMenu(true);
+
+        EventBus.getDefault().register(this);
 
         mRefreshLayout = view.findViewById(R.id.moment_refreshLayout);
         mRefreshLayout.setEnableRefresh(true);
@@ -100,6 +106,13 @@ public class MomentFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostNewMoment(EventBusMsg.PostNewMoment postNewMoment){
+        myDataset.clear();
+        momentTimeLine = "0";
+        getMoments(momentTimeLine);
     }
 
     public void getMoments(String momentTimeLine1){
@@ -158,4 +171,9 @@ public class MomentFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,10 +24,16 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.List;
 
 @ContentView(R.layout.activity_send_moment)
@@ -41,6 +48,8 @@ public class SendMomentActivity extends AppCompatActivity {
 
     private String mediaURl;
 
+    private String userName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,13 @@ public class SendMomentActivity extends AppCompatActivity {
         x.view().inject(SendMomentActivity.this);
 
         this.setTitle("Send Moment");
+
+
+
+        mediaURl = "";
+
+        MyApp myApp = (MyApp) getApplication();
+        userName = myApp.getName();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -128,9 +144,55 @@ public class SendMomentActivity extends AppCompatActivity {
                 this.finish();
                 break;
             case R.id.action_send_moment:
-                break;
+                String content = input_moment_content.getText().toString();
+                if (content.length()>0){
+                    RequestParams params = new RequestParams(URLCollection.POST_MOMENT);
+                    params.setMultipart(true);
+                    params.addBodyParameter("content", content);
+                    params.addBodyParameter("name", userName);
+                    if (mediaURl.length()>0){
+                        if (isImageFile(mediaURl)){
+                            params.addBodyParameter("type", "image");
+                        } else {
+                            params.addBodyParameter("type", "video");
+                        }
+                        File file = new File(mediaURl);
+                        params.addBodyParameter("file",file);
+                    } else {
+                        params.addBodyParameter("type", "text");
+                    }
+                    x.http().post(params, new Callback.CommonCallback<String>() {
+                        @Override
+                        public void onSuccess(String result) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(result);
+                                String status = jsonObject.getString("status");
+                                if (status.equals("ok")) { // succeed
+                                    SendMomentActivity.this.finish();
+                                    EventBus.getDefault().post(new EventBusMsg.PostNewMoment());
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        @Override
+                        public void onError(Throwable ex, boolean isOnCallback) { Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show(); }
+                        @Override
+                        public void onCancelled(CancelledException cex) {}
+                        @Override
+                        public void onFinished() {}
+                    });
+                } else {
+                    Toast.makeText(x.app(), "input something", Toast.LENGTH_SHORT).show();
+                }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 
 }
