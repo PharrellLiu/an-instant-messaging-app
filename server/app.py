@@ -53,7 +53,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER = os.getcwd() + '/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-socketio_url = "http://192.168.0.101:8001/api/broadcast"
+socketio_url = "http://127.0.0.1/api/broadcast"
 
 
 @app.before_request
