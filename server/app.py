@@ -299,6 +299,12 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 
+'''
+IOError: [Errno 32] Broken pipe
+meet this error when the client downloading the video
+still not find the solution
+'''
+
 ########################################################################################################################
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)
