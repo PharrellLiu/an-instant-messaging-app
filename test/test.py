@@ -35,7 +35,7 @@ mydb.conn.commit()
 
 
 print(type(result[0]['@@IDENTITY']))'''
-r = requests.post('http://192.168.0.104:5000/api/post_private_chat_message',
+r = requests.post('http://192.168.0.101:5000/api/post_private_chat_message',
                   data={"sendname":"lbw","receivename":"root","message":"wogan"})
 print(r.text)
 
