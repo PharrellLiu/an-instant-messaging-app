@@ -1,7 +1,8 @@
 import json
+import os
 from datetime import date, datetime
 import mysql.connector
-from flask import Flask, g, request
+from flask import Flask, g, request, send_from_directory
 import requests
 
 
@@ -246,6 +247,14 @@ def is_chatroom_exist(chatroom):
     if len(g.mydb.cursor.fetchall()) == 0:
         return False
     return True
+
+
+########################################################################################################################
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    directory = os.getcwd() + '/uploads'
+    print directory
+    return send_from_directory(directory, filename, as_attachment=True)
 
 
 ########################################################################################################################
