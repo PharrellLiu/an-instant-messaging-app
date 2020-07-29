@@ -1,36 +1,42 @@
 package my.application.ui.moment;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import my.application.ButtonAdapterOfChatroomAndPrivateChat;
-import my.application.CreateChatroomActivity;
+import my.application.ChatMessageAdapter;
 import my.application.MomentAdapter;
 import my.application.R;
 import my.application.SendMomentActivity;
+import my.application.URLCollection;
 
 public class MomentFragment extends Fragment {
 
@@ -44,6 +50,8 @@ public class MomentFragment extends Fragment {
     private List<MomentAdapter.Moment> myDataset = new ArrayList<MomentAdapter.Moment>();
 
     private RefreshLayout mRefreshLayout;
+
+    private String momentTimeLine;
 
     public static MomentFragment newInstance() {
         return new MomentFragment();
@@ -60,20 +68,6 @@ public class MomentFragment extends Fragment {
         mRefreshLayout.setEnableRefresh(true);
         mRefreshLayout.setEnableLoadMore(true);
 
-        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(RefreshLayout refreshLayout) {
-
-            }
-        });
-
-        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(RefreshLayout refreshLayout) {
-
-            }
-        });
-
         recyclerView = view.findViewById(R.id.moment_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(mContext);
@@ -81,8 +75,64 @@ public class MomentFragment extends Fragment {
         mAdapter = new MomentAdapter(myDataset,mContext);
         recyclerView.setAdapter(mAdapter);
 
+        momentTimeLine = "0";
+
+        getMoments(momentTimeLine);
+
+        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                myDataset.clear();
+                momentTimeLine = "0";
+                getMoments(momentTimeLine);
+                mRefreshLayout.finishRefresh();
+            }
+        });
+
+        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                getMoments(momentTimeLine);
+                mRefreshLayout.finishLoadMore();
+            }
+        });
+
+
+
         return view;
     }
+
+    public void getMoments(String momentTimeLine1){
+        RequestParams params = new RequestParams(URLCollection.GET_MOMENTS);
+        params.addBodyParameter("momentTimeLine",momentTimeLine1);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    JSONArray jsonArray = jsonObject.getJSONArray("result");
+                    int len = jsonArray.length();
+                    for (int i = 0; i<len; i++) {
+                        JSONObject temp = jsonArray.getJSONObject(i);
+                        myDataset.add(new MomentAdapter.Moment(URLCollection.DOWNLOAD_RESOURCE + temp.getString("file_name"),
+                                temp.getString("content"),temp.getString("name"),
+                                temp.getString("moment_time"),temp.getString("type")));
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    momentTimeLine = myDataset.get(myDataset.size()-1).getTime();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) { Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_SHORT).show(); }
+            @Override
+            public void onCancelled(CancelledException cex) {}
+            @Override
+            public void onFinished() {}
+        });
+    }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -47,7 +47,7 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.MomentView
     @Override
     public void onBindViewHolder(@NonNull MomentAdapter.MomentViewHolder holder, int position) {
         Moment moment = mDataset.get(position);
-        int type = moment.getType();
+        String type = moment.getType();
         holder.moment_username.setVisibility(View.VISIBLE);
         holder.moment_content.setVisibility(View.VISIBLE);
         holder.moment_time.setVisibility(View.VISIBLE);
@@ -56,15 +56,15 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.MomentView
         holder.moment_content.setText(moment.getContent());
         holder.moment_time.setText(moment.getTime());
 
-        // 0 is text, 1 is image, 2 is video
-        if (type==0){
+        // text, image, video
+        if (type.equals("text")){
             holder.moment_picture.setVisibility(View.GONE);
             holder.moment_exo_play_view.setVisibility(View.GONE);
-        } else if (type == 1) {
+        } else if (type.equals("image")) {
             holder.moment_picture.setVisibility(View.VISIBLE);
             holder.moment_exo_play_view.setVisibility(View.GONE);
             Glide.with(mcontext).load(moment.getUrl()).into(holder.moment_picture);
-        } else {
+        } else if (type.equals("video")){
             holder.moment_picture.setVisibility(View.GONE);
             holder.moment_exo_play_view.setVisibility(View.VISIBLE);
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -110,9 +110,9 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.MomentView
         private String userName;
         private String time;
         // 0 is text, 1 is image, 2 is video
-        private int type;
+        private String type;
 
-        public Moment(String url, String content, String userName, String time, int type) {
+        public Moment(String url, String content, String userName, String time, String type) {
             this.url = url;
             this.content = content;
             this.time = time;
@@ -124,7 +124,7 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.MomentView
         public String getUserName() { return userName; }
         public String getTime() { return time; }
         public String getContent() { return content; }
-        public int getType() { return type; }
+        public String getType() { return type; }
     }
 
 }
