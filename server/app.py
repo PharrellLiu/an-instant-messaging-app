@@ -98,10 +98,10 @@ def is_name_exist_and_password_correct_in_login(name, password):
 ########################################################################################################################
 @app.route('/api/register', methods=['POST'])
 def register():
-    password = request.values.get("password")
     name = request.values.get("name")
     if is_name_exist_in_register(name) is True:
         return json.dumps({"status": "error", "message": "name already exists"})
+    password = request.values.get("password")
     write_in_login(name, password)
     return json.dumps({"status": "ok"})
 
