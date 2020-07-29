@@ -272,17 +272,8 @@ def post_moment():
                         VALUES (%s, %s, %s, %s, default);'''
     params = (name, content, moment_type, filename)
     g.mydb.cursor.execute(query, params)
-    query = "SELECT @@IDENTITY;"
-    g.mydb.cursor.execute(query)
-    result = g.mydb.cursor.fetchall()
     g.mydb.conn.commit()
-    id = str(result[0]["@@IDENTITY"])
-    query = '''SELECT moment_time FROM moments where id = %s'''
-    params = (id,)
-    g.mydb.cursor.execute(query, params)
-    result = g.mydb.cursor.fetchall()
-    moment_time = result[0]['moment_time']
-    return json.dumps({"status": "ok", "message_time": moment_time}, cls=ComplexEncoder)
+    return json.dumps({"status": "ok"})
 
 
 ########################################################################################################################
