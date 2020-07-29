@@ -1,3 +1,5 @@
 # an instant messaging app
  
-processing...
+program is done!
+
+code review would be finish in a few days, as this readme too.
