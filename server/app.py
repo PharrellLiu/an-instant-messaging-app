@@ -1,10 +1,10 @@
 import json
 import os
+import time
 from datetime import date, datetime
 import mysql.connector
-from flask import Flask, g, request, send_from_directory
 import requests
-from werkzeug.utils import secure_filename
+from flask import Flask, g, request, send_from_directory
 
 
 class ComplexEncoder(json.JSONEncoder):
@@ -254,15 +254,19 @@ def is_chatroom_exist(chatroom):
 
 
 ########################################################################################################################
-@app.route('/api/sent_moment', methods=['POST'])
-def sent_moment():
+@app.route('/api/post_moment', methods=['POST'])
+def post_moment():
     name = request.values.get("name")
     content = request.values.get("content")
     moment_type = request.values.get("type")
     filename = ''
-    if moment_type != 'text':
+    if moment_type == 'image':
         file = request.files['file']
-        filename = secure_filename(file.filename)
+        filename = str(int(time.time())) + name + ".jpg"
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    if moment_type == 'video':
+        file = request.files['file']
+        filename = str(int(time.time())) + name + ".mp4"
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     query = '''INSERT INTO moments (name, content, type, file_name, moment_time) 
                         VALUES (%s, %s, %s, %s, default);'''

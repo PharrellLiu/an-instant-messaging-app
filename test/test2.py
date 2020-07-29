@@ -1,5 +1,10 @@
 import requests
+from datetime import datetime
+import time
 
-r = requests.post("http://192.168.0.101:5000/api/sent_moment", data={'name': 'aaa', 'content': 'qqew', 'type': 'iamge'},
-                  files={'file': open("444.jpg", 'rb')})
+r = requests.post("http://192.168.0.101:5000/api/post_moment", data={'name': 'lbw', 'content': 'ooo', 'type': 'image'},
+                  files={'file': open("666.jpg", 'rb')})
 print(r.text)
+
+
+
