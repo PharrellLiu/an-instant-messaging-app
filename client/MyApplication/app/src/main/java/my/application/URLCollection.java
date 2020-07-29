@@ -1,7 +1,7 @@
 package my.application;
 
 public class URLCollection {
-    public static final String URL = "http://192.168.0.104:5000/api";
+    public static final String URL = "http://192.168.0.101:5000/api";
     public static final String LOGIN = URL + "/login";
     public static final String REGISTER = URL + "/register";
     public static final String GET_FRI_LIST = URL + "/get_fri_list";

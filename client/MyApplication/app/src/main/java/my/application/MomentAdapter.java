@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -24,7 +25,6 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.MomentView
         } else if (type == 1) {
             holder.moment_picture.setVisibility(View.VISIBLE);
             holder.moment_exo_play_view.setVisibility(View.GONE);
-            Picasso.get().load(moment.getUrl()).into(holder.moment_picture);
+            Glide.with(mcontext).load(moment.getUrl()).into(holder.moment_picture);
         } else {
             holder.moment_picture.setVisibility(View.GONE);
             holder.moment_exo_play_view.setVisibility(View.VISIBLE);
