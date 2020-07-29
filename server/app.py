@@ -4,6 +4,7 @@ from datetime import date, datetime
 import mysql.connector
 from flask import Flask, g, request, send_from_directory
 import requests
+from werkzeug.utils import secure_filename
 
 
 class ComplexEncoder(json.JSONEncoder):
@@ -48,6 +49,9 @@ if we use jsonify in here, we would meet this error
 '''
 
 app = Flask(__name__)
+
+UPLOAD_FOLDER = os.getcwd() + '/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 socketio_url = "http://192.168.0.104:8001/api/broadcast"
 
@@ -250,11 +254,54 @@ def is_chatroom_exist(chatroom):
 
 
 ########################################################################################################################
-@app.route('/uploads/<filename>')
+@app.route('/api/sent_moment', methods=['POST'])
+def sent_moment():
+    name = request.values.get("name")
+    content = request.values.get("content")
+    moment_type = request.values.get("type")
+    filename = ''
+    if moment_type != 'text':
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    query = '''INSERT INTO moments (name, content, type, file_name, moment_time) 
+                        VALUES (%s, %s, %s, %s, default);'''
+    params = (name, content, moment_type, filename)
+    g.mydb.cursor.execute(query, params)
+    query = "SELECT @@IDENTITY;"
+    g.mydb.cursor.execute(query)
+    result = g.mydb.cursor.fetchall()
+    g.mydb.conn.commit()
+    id = str(result[0]["@@IDENTITY"])
+    query = '''SELECT moment_time FROM moments where id = %s'''
+    params = (id,)
+    g.mydb.cursor.execute(query, params)
+    result = g.mydb.cursor.fetchall()
+    moment_time = result[0]['moment_time']
+    return json.dumps({"status": "ok", "message_time": moment_time}, cls=ComplexEncoder)
+
+
+########################################################################################################################
+@app.route('/api/get_moments', methods=['POST'])
+def get_moments():
+    momentTimeLine = request.values.get("momentTimeLine")
+    if momentTimeLine == '0':
+        query = '''SELECT * FROM moments ORDER BY id DESC'''
+        g.mydb.cursor.execute(query)
+    else:
+        query = '''SELECT * FROM moments WHERE moment_time < %s ORDER BY id DESC'''
+        params = (momentTimeLine,)
+        g.mydb.cursor.execute(query, params)
+    result = g.mydb.cursor.fetchall()
+    if len(result) >= 15:
+        result = result[:15]
+    return json.dumps({"result": result}, cls=ComplexEncoder)
+
+
+########################################################################################################################
+@app.route('/api/download/<filename>')
 def uploaded_file(filename):
-    directory = os.getcwd() + '/uploads'
-    print directory
-    return send_from_directory(directory, filename, as_attachment=True)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 
 ########################################################################################################################
