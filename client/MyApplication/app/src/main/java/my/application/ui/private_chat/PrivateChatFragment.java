@@ -33,6 +33,9 @@ import my.application.URLCollection;
 import org.xutils.x;
 
 public class PrivateChatFragment extends Fragment {
+    /**
+     * this is the fragment of private chat, show all users here
+     **/
 
     private PrivateChatViewModel mViewModel;
     private RecyclerView recyclerView;
@@ -52,6 +55,7 @@ public class PrivateChatFragment extends Fragment {
         View view = inflater.inflate(R.layout.private_chat_fragment, container, false);
 
         mContext = getActivity();
+
         // init recycler view
         recyclerView = view.findViewById(R.id.private_chat_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -60,9 +64,11 @@ public class PrivateChatFragment extends Fragment {
         mAdapter = new ButtonAdapterOfChatroomAndPrivateChat(myDataset,mContext,0);
         recyclerView.setAdapter(mAdapter);
 
+        // get the user's name
         MyApp myApp = (MyApp) getActivity().getApplication();
         final String userName = myApp.getName();
 
+        // init the users list
         RequestParams params = new RequestParams(URLCollection.GET_FRI_LIST);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override

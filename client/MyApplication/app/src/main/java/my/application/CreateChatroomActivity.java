@@ -31,6 +31,11 @@ import static my.application.URLCollection.GET_FRI_LIST;
 
 @ContentView(R.layout.activity_create_chatroom)
 public class CreateChatroomActivity extends AppCompatActivity {
+    /**
+     * this is the create chatroom activity
+     * input the chatroom name, choose the members,
+     * then created!
+     */
 
     @ViewInject(R.id.button_select_all)
     private Button button_select_all;
@@ -56,15 +61,18 @@ public class CreateChatroomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         x.view().inject(CreateChatroomActivity.this);
 
+        // init recycler view
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new CreateChatroomAdapter(myDataset);
         recyclerView.setAdapter(mAdapter);
 
+        // get the user's name
         MyApp myApp = (MyApp) getApplication();
         userName = myApp.getName();
 
+        // to init the users list
         RequestParams params = new RequestParams(GET_FRI_LIST);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
@@ -91,8 +99,10 @@ public class CreateChatroomActivity extends AppCompatActivity {
             @Override
             public void onFinished() {}
         });
+
     }
 
+    // button to select all users
     @Event(value = R.id.button_select_all)
     private void onClickSelectAllButton(View view) {
         int len = myDataset.size();
@@ -102,6 +112,7 @@ public class CreateChatroomActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
     }
 
+    // button to deselect all users
     @Event(value = R.id.button_deselect_all)
     private void onClickDeselectAllButton(View view) {
         int len = myDataset.size();
@@ -111,11 +122,13 @@ public class CreateChatroomActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
     }
 
+    // the quit button
     @Event(value = R.id.button_cancel)
     private void onClickCancelButton(View view) {
         this.finish();
     }
 
+    // create chatroom
     @Event(value = R.id.button_confirm)
     private void onClickConfirmButton(View view) {
         int len = myDataset.size();
@@ -168,4 +181,5 @@ public class CreateChatroomActivity extends AppCompatActivity {
             }
         }
     }
+
 }

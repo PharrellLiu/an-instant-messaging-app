@@ -13,6 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class ButtonAdapterOfChatroomAndPrivateChat extends RecyclerView.Adapter<ButtonAdapterOfChatroomAndPrivateChat.ButtonViewHolderOfChatroomAndPrivateChat>{
+    /**
+     * this is adapter of both chatroom fragment and private chat fragment
+     * however, the name of this adapter is weird, there are textviews not buttons
+     * because I set them as button firstly, and change it
+     **/
 
     private List<String> mDataset;
     private Context mContext;

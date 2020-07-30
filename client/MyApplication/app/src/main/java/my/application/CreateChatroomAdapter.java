@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class CreateChatroomAdapter extends RecyclerView.Adapter<CreateChatroomAdapter.CreateChatroomViewHolder> {
+    /**
+     * this is the adatper of the users list in the CreateChatroomActivity
+     * except the users' names, there are checkboxes
+     */
 
     private List<Member> mDataset;
 
@@ -70,4 +74,5 @@ public class CreateChatroomAdapter extends RecyclerView.Adapter<CreateChatroomAd
             textView = itemView.findViewById(R.id.textview_choose_name);
         }
     }
+
 }

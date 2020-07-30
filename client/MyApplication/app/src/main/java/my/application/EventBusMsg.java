@@ -1,6 +1,9 @@
 package my.application;
 
 public class EventBusMsg {
+    /**
+     * all event bus message is defined in here
+     */
 
     public static class ChatActivityStart {
         private int isChatroom;

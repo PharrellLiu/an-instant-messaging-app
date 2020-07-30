@@ -38,6 +38,9 @@ import java.util.List;
 
 @ContentView(R.layout.activity_send_moment)
 public class SendMomentActivity extends AppCompatActivity {
+    /**
+     * send moment is here!
+     */
 
     @ViewInject(R.id.input_moment_content)
     private EditText input_moment_content;
@@ -58,19 +61,21 @@ public class SendMomentActivity extends AppCompatActivity {
 
         this.setTitle("Send Moment");
 
-
-
+        // if there is a image or video, we need the url (uri) as a part of the moment
         mediaURl = "";
 
+        // get the user's name
         MyApp myApp = (MyApp) getApplication();
         userName = myApp.getName();
 
+        // init the actionbar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // to choose image or video
         choose_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,6 +110,7 @@ public class SendMomentActivity extends AppCompatActivity {
         return result;
     }
 
+    // get the result of choosing image or video
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -127,6 +133,8 @@ public class SendMomentActivity extends AppCompatActivity {
         return true;
     }
 
+    // if the file chosen is an image?
+    // it would be used when sending moment
     public boolean isImageFile(String filePath) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -137,6 +145,7 @@ public class SendMomentActivity extends AppCompatActivity {
         return true;
     }
 
+    // button of send moment is here
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

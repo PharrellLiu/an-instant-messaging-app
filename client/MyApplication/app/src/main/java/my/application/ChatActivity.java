@@ -35,6 +35,10 @@ import java.util.List;
 
 @ContentView(R.layout.activity_chat)
 public class ChatActivity extends AppCompatActivity {
+    /**
+     * this is the chat activity, both chatroom and private chat use it
+     * therefore, there may be a lot of conditional branch
+     */
 
     @ViewInject(R.id.chat_recycler_view)
     private RecyclerView recyclerView;
@@ -62,6 +66,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         x.view().inject(ChatActivity.this);
 
+        // init actionbar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
@@ -75,6 +80,7 @@ public class ChatActivity extends AppCompatActivity {
         nameOfChatroomOrFri = intent.getStringExtra("nameOfChatroomOrFri");
         this.setTitle(nameOfChatroomOrFri);
 
+        // send message to the home activity for the socketio function
         EventBus.getDefault().register(this);
         EventBus.getDefault().post(new EventBusMsg.ChatActivityStart(isChatroom,nameOfChatroomOrFri));
 
@@ -89,6 +95,7 @@ public class ChatActivity extends AppCompatActivity {
         // messageTimeLine is uesd to load more messages, based on the messageTimeLine, server selects the previous messages that have not been loaded
         messageTimeLine = "0";
 
+        // get the user's name
         MyApp myApp = (MyApp) getApplication();
         userName = myApp.getName();
 
@@ -200,6 +207,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    // to receive the message from socketio
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPushMsgToChat(EventBusMsg.PushMsgToChat pushMsgToChat) {
         myDataset.add(new ChatMessageAdapter.ChatMessage(pushMsgToChat.getSendName(),pushMsgToChat.getMessageTime(),
@@ -265,7 +273,6 @@ public class ChatActivity extends AppCompatActivity {
             } else {
                 this.finish();
             }
-
         }
         return super.onOptionsItemSelected(item);
     }

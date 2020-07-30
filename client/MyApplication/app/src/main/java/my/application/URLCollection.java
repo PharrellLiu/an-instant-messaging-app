@@ -1,7 +1,11 @@
 package my.application;
 
 public class URLCollection {
-    public static final String URL = "http://192.168.0.101:5000/api";
+    /**
+     * all server's api is here
+     * please use your own ip address
+     */
+    public static final String URL = "http://***.***.***.***/api";
     public static final String LOGIN = URL + "/login";
     public static final String REGISTER = URL + "/register";
     public static final String GET_FRI_LIST = URL + "/get_fri_list";
@@ -14,5 +18,5 @@ public class URLCollection {
     public static final String GET_MOMENTS = URL + "/get_moments";
     public static final String POST_MOMENT = URL + "/post_moment";
     public static final String DOWNLOAD_RESOURCE =  URL + "/download/";
-    public static final String SOCKETIO = "http://192.168.0.104:8001";
+    public static final String SOCKETIO = "http://***.***.***.***:8001";
 }

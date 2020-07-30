@@ -35,7 +35,6 @@ import org.xutils.x;
 import java.util.ArrayList;
 import java.util.List;
 
-import my.application.ChatMessageAdapter;
 import my.application.EventBusMsg;
 import my.application.MomentAdapter;
 import my.application.R;
@@ -43,6 +42,9 @@ import my.application.SendMomentActivity;
 import my.application.URLCollection;
 
 public class MomentFragment extends Fragment {
+    /**
+     * this is the fragment of moment, show all moments here, and provide the button to send moment
+     **/
 
     private MomentViewModel mViewModel;
 
@@ -68,12 +70,10 @@ public class MomentFragment extends Fragment {
         mContext = getActivity();
         setHasOptionsMenu(true);
 
+        // when user sent a moment, used event bus to notify this fragment to refresh the moments list
         EventBus.getDefault().register(this);
 
-        mRefreshLayout = view.findViewById(R.id.moment_refreshLayout);
-        mRefreshLayout.setEnableRefresh(true);
-        mRefreshLayout.setEnableLoadMore(true);
-
+        // init recycler view
         recyclerView = view.findViewById(R.id.moment_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(mContext);
@@ -81,9 +81,15 @@ public class MomentFragment extends Fragment {
         mAdapter = new MomentAdapter(myDataset,mContext);
         recyclerView.setAdapter(mAdapter);
 
+        // to init the moments list, momentTimeLine is used to record the last moment's time, it would be used in server, to select the moments in database
+        // specific, please see the code of server
         momentTimeLine = "0";
-
         getMoments(momentTimeLine);
+
+        // init refreshlayout and define the function
+        mRefreshLayout = view.findViewById(R.id.moment_refreshLayout);
+        mRefreshLayout.setEnableRefresh(true);
+        mRefreshLayout.setEnableLoadMore(true);
 
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -103,11 +109,10 @@ public class MomentFragment extends Fragment {
             }
         });
 
-
-
         return view;
     }
 
+    // refresh when sent a moment
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostNewMoment(EventBusMsg.PostNewMoment postNewMoment){
         myDataset.clear();
@@ -115,6 +120,7 @@ public class MomentFragment extends Fragment {
         getMoments(momentTimeLine);
     }
 
+    // acquire moments
     public void getMoments(String momentTimeLine1){
         RequestParams params = new RequestParams(URLCollection.GET_MOMENTS);
         params.addBodyParameter("momentTimeLine",momentTimeLine1);
@@ -146,14 +152,14 @@ public class MomentFragment extends Fragment {
         });
     }
 
-
+    // send_moment_actionbar is used by both moment fragment and send moment activity
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.send_moment_actionbar,menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    // 设置Send Moment按钮
+    // set button to send moment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_send_moment) {
@@ -176,4 +182,5 @@ public class MomentFragment extends Fragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
 }

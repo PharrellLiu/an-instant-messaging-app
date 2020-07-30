@@ -25,6 +25,11 @@ import org.xutils.x;
 import java.net.URISyntaxException;
 
 public class HomeActivity extends AppCompatActivity {
+    /**
+     * after login, we would be here
+     * there are 3 fragments here, private chat, chatroom and moment
+     * also, the socketio is here too, to receive the message from server
+     */
 
     private String userName;
 
@@ -44,6 +49,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // init fragments
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_chatroom, R.id.navigation_private_chat, R.id.navigation_moment)
@@ -52,11 +59,16 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+        // get the user's name
         MyApp myApp = (MyApp) getApplication();
         userName = myApp.getName();
 
+        // init event bus, we use event bus to communicate to the ChatActvity
+        // to know whether the user is in a chatroom or in a private chat
+        // to determine if push the message to the ChatActivity of just provide a notification
         EventBus.getDefault().register(this);
 
+        // record the state of the ChatActivity
         isChatActivityStart = 0;
         isChatroom = -1;
         nameOfChatroomOrFri = "";
@@ -67,6 +79,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    // to receive the message from server and determine how to present it
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -78,8 +91,7 @@ public class HomeActivity extends AppCompatActivity {
                 String message_time = jsonObject.getString("message_time");
                 final String sendname = jsonObject.getString("sendname");
                 if (isChatActivityStart == 1){
-                    if (is_chatroom == 1 && isChatroom == 1
-                            && chatroom_or_receivename.equals(nameOfChatroomOrFri)){
+                    if (is_chatroom == 1 && isChatroom == 1 && chatroom_or_receivename.equals(nameOfChatroomOrFri)){
                         EventBus.getDefault().post(new EventBusMsg.PushMsgToChat(sendname, message,message_time));
                     } else if (is_chatroom == 0 && isChatroom == 0 && sendname.equals(nameOfChatroomOrFri)){
                         EventBus.getDefault().post(new EventBusMsg.PushMsgToChat(sendname, message,message_time));
@@ -119,6 +131,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     };
 
+    // to know whether the user is in a chatroom or in a private chat
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChatActivityStart(EventBusMsg.ChatActivityStart chatActivityStart){
         isChatActivityStart = 1;
@@ -126,6 +139,7 @@ public class HomeActivity extends AppCompatActivity {
         nameOfChatroomOrFri = chatActivityStart.getNameOfChatroomOrFri();
     }
 
+    // to know whether the user is in a chatroom or in a private chat
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChatActivityEnd(EventBusMsg.ChatActivityEnd chatActivityEnd){
         isChatActivityStart = 0;

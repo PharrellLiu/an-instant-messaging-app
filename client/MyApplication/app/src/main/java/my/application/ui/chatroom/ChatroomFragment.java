@@ -35,6 +35,9 @@ import my.application.R;
 import my.application.URLCollection;
 
 public class ChatroomFragment extends Fragment {
+    /**
+     * this is the fragment of chatroom, it show the chatroom list, and provide the button to create chatroom
+     */
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -63,9 +66,11 @@ public class ChatroomFragment extends Fragment {
         mAdapter = new ButtonAdapterOfChatroomAndPrivateChat(myDataset,mContext,1);
         recyclerView.setAdapter(mAdapter);
 
+        // get the user's name
         MyApp myApp = (MyApp) getActivity().getApplication();
         String userName = myApp.getName();
 
+        // init the chatroom list
         String url = URLCollection.GET_CHATROOM_LIST + userName;
         RequestParams params = new RequestParams(url);
         x.http().get(params, new Callback.CommonCallback<String>() {
@@ -91,6 +96,7 @@ public class ChatroomFragment extends Fragment {
             public void onFinished() {}
         });
 
+        // to set the actionbar
         setHasOptionsMenu(true);
 
         return view;
@@ -102,7 +108,7 @@ public class ChatroomFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    // 设置Create Chatroom按钮
+    // set the button to create chatrooom
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_create_chatroom) {

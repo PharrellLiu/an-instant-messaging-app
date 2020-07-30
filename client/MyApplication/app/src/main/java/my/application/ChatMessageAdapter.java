@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.ChatMessageViewHolder>{
+    /**
+     * this is the adapter of ChatActivity
+     */
 
     private List<ChatMessage> mDataset;
 

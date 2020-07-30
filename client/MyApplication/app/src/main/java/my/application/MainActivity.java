@@ -20,6 +20,9 @@ import org.xutils.x;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
+    /**
+     * this is the login function
+     **/
 
     @ViewInject(R.id.button_login)
     Button loginButton;
@@ -52,13 +55,13 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         String status = jsonObject.getString("status");
-                        if (status.equals("ok")){ // succeed
+                        if (status.equals("ok")){
                             Toast.makeText(x.app(), "welcome", Toast.LENGTH_SHORT).show();
                             MyApp myApp = (MyApp) getApplication();
                             myApp.setName(name);
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             startActivity(intent);
-                        } else { // show the error
+                        } else {
                             Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
@@ -91,13 +94,13 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         String status = jsonObject.getString("status");
-                        if (status.equals("ok")){ // succeed
+                        if (status.equals("ok")){
                             Toast.makeText(x.app(), "welcome", Toast.LENGTH_SHORT).show();
                             MyApp myApp = (MyApp) getApplication();
                             myApp.setName(name);
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             startActivity(intent);
-                        } else {  // show the error
+                        } else {
                             Toast.makeText(x.app(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {

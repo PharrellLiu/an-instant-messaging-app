@@ -24,6 +24,10 @@ import com.luck.picture.lib.widget.longimage.ImageViewState;
 import com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView;
 
 /**
+ * this is the glide engine for the picture selector in SendMomentActivity, I copy it from the source package of picture selector
+ */
+
+/**
  * @author：luck
  * @date：2019-11-13 17:02
  * @describe：Glide加载引擎

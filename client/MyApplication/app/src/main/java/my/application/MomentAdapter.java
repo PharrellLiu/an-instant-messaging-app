@@ -29,6 +29,9 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.List;
 
 public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.MomentViewHolder> {
+    /**
+     * this is the adapter of moments in moment fragment
+     */
 
     private List<Moment> mDataset;
     private Context mcontext;
@@ -63,10 +66,15 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.MomentView
         } else if (type.equals("image")) {
             holder.moment_picture.setVisibility(View.VISIBLE);
             holder.moment_exo_play_view.setVisibility(View.GONE);
+
+            // use glide to show image
             Glide.with(mcontext).load(moment.getUrl()).into(holder.moment_picture);
         } else if (type.equals("video")){
             holder.moment_picture.setVisibility(View.GONE);
             holder.moment_exo_play_view.setVisibility(View.VISIBLE);
+
+            // exoplayer to show video
+            // there would be some issues in this player, and I did not find the solution
             BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
             TrackSelection.Factory factory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
             DefaultTrackSelector trackSelection = new DefaultTrackSelector(factory);
@@ -109,7 +117,6 @@ public class MomentAdapter extends RecyclerView.Adapter<MomentAdapter.MomentView
         private String content;
         private String userName;
         private String time;
-        // 0 is text, 1 is image, 2 is video
         private String type;
 
         public Moment(String url, String content, String userName, String time, String type) {

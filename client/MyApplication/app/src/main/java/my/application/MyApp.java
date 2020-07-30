@@ -5,7 +5,11 @@ import android.app.Application;
 import org.xutils.x;
 
 public class MyApp extends Application {
-    // the user's name
+    /**
+     * this class is used to init the xutils and set the user's name as a global variable
+     *
+     */
+
     private String name;
 
     @Override
@@ -19,6 +23,7 @@ public class MyApp extends Application {
     public void setName(String name){
         this.name = name;
     }
+
     public String getName(){
         return name;
     }
