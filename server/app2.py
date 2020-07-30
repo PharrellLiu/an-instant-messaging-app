@@ -18,7 +18,7 @@ class MyDatabase:
             port=3306,
             user="dbuser",
             password="password",
-            database="iems5722",
+            database="abcd",
         )
         self.cursor = self.conn.cursor(dictionary=True)
         return
