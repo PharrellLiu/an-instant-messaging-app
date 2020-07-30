@@ -20,6 +20,6 @@ In The End
 
 It is hard to describe the project specifically, so I don't want to write a lot here.
 
-And like I said, it is from the final project of my course, and this is a group project, so I want to thank the members in my group here, Miss. YANG and Mr. CHEN.
+And like I said, it is from the final project of my course, and this is a group project, so I want to thank the members in my group here, Miss YANG and Mr. CHEN.
 
 OK, that's all. (it is hard to write the readme!)
